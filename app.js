@@ -4,7 +4,16 @@ var http = require('http');
 var app = express();
 
 app.get('/',function(req,res){
-   res.send('Hello on S.M.S.L'); // message display
+   res.send('Hello on Show My Social Likes'); // message display
+});
+app.get('/message',function(req,res){
+    res.send('This is message');
+});
+app.get('/account',function(req,res){
+    res.send('This is account');
+});
+app.get('/show',function(req,res){
+    res.send('This is show');
 });
 
 var port = process.env.PORT; //process port on cloud 9
