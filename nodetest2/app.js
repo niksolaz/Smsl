@@ -7,13 +7,14 @@ var bodyParser = require('body-parser');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest2');
+var io = require('socket.io').(app);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var message = require('./routes/message');
 
-var app = express();
-
+var app = express().createServer();
+app.listen(3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -29,6 +30,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/message',message);
+
+//socket.io
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/message.jade');
+});
+
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
 
 app.use(function(req,res,next){
   req.db = db;
