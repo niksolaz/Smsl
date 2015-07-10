@@ -1,24 +1,53 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var express = require('express');
+var app = express();
+
+var message = {
+	'sms':{
+		'id':101,
+		'user':'Mario Rossi',
+		'textM':[],
+		'social':{
+			'social_id':['Twitter','Google+','Facebook']
+		}
+
+	}
+};
+
+app.use(express.static(__dirname + '/public'));
 
 app.get('/',function(req,res){
-	res.sendFile('index.html',{root:__dirname});
-});
-/*
-io.on('connection',function(socket){
-	console.log('a user connected');
-	socket.on('disconnect',function(){
-		console.log('user disconnected');
-	});
-});
-*/
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    console.log('message: ' + msg);
-  });
+	res.send(message[req.param.message]);
+	console.log(message);
 });
 
-http.listen(3000,function(){
-	console.log('listening on *:3000');
+app.get('/:sms',function(req,res){
+	res.send(message[req.param.sms]);
+	console.log(message.sms);
 });
+
+app.get('/sms/:id',function(req,res){
+	res.send(message[req.param.id]);
+	console.log(message.sms.id);
+});
+
+app.get('/sms/:user',function(req,res){
+	res.send(message[req.param.user]);
+	console.log(message.sms.user);
+});
+
+app.get('/sms/:text',function(req,res){
+	res.send(message[req.param.textM]);
+	console.log(message.sms.textM);
+});
+
+app.get('/sms/:social',function(req,res){
+	res.send(message[req.param.social]);
+	console.log(message.sms.social);
+});
+
+app.get('/sms/social/social_id',function(req,res){
+	res.send(message[req.param.social_id]);
+	console.log(message.sms.social.social_id);
+});
+
+app.listen(3000);
