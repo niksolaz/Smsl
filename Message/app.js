@@ -1,53 +1,54 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
-var message = {
-	'sms':{
+var Mex = {
+	'account':{
 		'id':101,
-		'user':'Mario Rossi',
-		'textM':[],
-		'social':{
-			'social_id':['Twitter','Google+','Facebook']
+		'username':'Mario Rossi'
+	},
+	'show':{
+		'message':{
+			'message_id':{
+				'social':['Twitter','Facebook','Google+']
+			}
 		}
-
 	}
 };
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/',function(req,res){
-	res.send(message[req.param.message]);
-	console.log(message);
+app.post('/message/social',function(req,res){
+	console.log();
 });
 
-app.get('/:sms',function(req,res){
-	res.send(message[req.param.sms]);
-	console.log(message.sms);
+app.put('/message/message_id',function(req,res){
 });
 
-app.get('/sms/:id',function(req,res){
-	res.send(message[req.param.id]);
-	console.log(message.sms.id);
+app.post('/:account',function(req,res){
 });
 
-app.get('/sms/:user',function(req,res){
-	res.send(message[req.param.user]);
-	console.log(message.sms.user);
+app.get('/account/:username',function(req,res){
+	res.send(Mex[req.param.username]);
+	console.log(Mex.account.username);
 });
 
-app.get('/sms/:text',function(req,res){
-	res.send(message[req.param.textM]);
-	console.log(message.sms.textM);
+app.put('/account/:id',function(req,res){
 });
 
-app.get('/sms/:social',function(req,res){
-	res.send(message[req.param.social]);
-	console.log(message.sms.social);
+app.get('/show/message/message_id',function(req,res){
+	res.send(Mex[req.param.message_id]);
+	console.log(Mex.show.message.message_id);
 });
 
-app.get('/sms/social/social_id',function(req,res){
-	res.send(message[req.param.social_id]);
-	console.log(message.sms.social.social_id);
+app.get('/show/message/message_id/social',function(req,res){
+	res.send(Mex[req.param.social]);
+	console.log(Mex.show.message.message_id.social);
 });
 
-app.listen(3000);
+var server = app.listen(3000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});
