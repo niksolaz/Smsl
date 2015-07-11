@@ -42,7 +42,7 @@ app.get('/account/:username',function(req,res){
 app.put('/account/:id',function(req,res){
 });
 
-app.get('/show/message/message_id',function(req,res){
+app.get('/show/message/:message_id',function(req,res){
 	res.send(Mex[req.param.message_id]);
 	console.log(Mex.show.message.message_id);
 });
