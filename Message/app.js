@@ -4,8 +4,8 @@ var app = express();
 
 var Mex = {
 	'account':{
-		'id':101,
-		'username':'Mario Rossi'
+		'id':Number,
+		'username':String
 	},
 	'show':{
 		'message':{
@@ -20,20 +20,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-/*app.engine('json',function(req,res,next){
-	res.set('Content-Type','application/json');
-	next();
-});*/
-
-app.use('/',function(req,res,next){
-	res.send(req.param.Mex);
-	next();
-});
-
 
 app.post('/message/social',function(req,res){
 	console.log(req.body.social);
-	res.json(req.body.social);
+	res.json({social:req.body.social});
 });
 
 app.put('/message/message_id',function(req,res){
@@ -41,15 +31,15 @@ app.put('/message/message_id',function(req,res){
 
 app.post('/account',function(req,res){
 	console.log(req.body.account);
-	res.json(req.body.account);
+	res.json({id:req.body.id, username:req.body.username});
 });
 
-app.get('/account/:username',function(req,res){
+app.get('/account/username',function(req,res){
 	res.send(Mex[req.param.username]);
 	console.log(Mex.account.username);
 });
 
-app.put('/account/:id',function(req,res){
+app.put('/account/id',function(req,res){
 });
 
 app.get('/show/message/message_id',function(req,res){
