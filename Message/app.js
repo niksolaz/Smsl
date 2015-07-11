@@ -20,10 +20,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-app.engine('json',function(req,res,next){
+/*app.engine('json',function(req,res,next){
 	res.set('Content-Type','application/json');
 	next();
-});
+});*/
 
 app.use('/',function(req,res,next){
 	res.send(req.param.Mex);
@@ -33,7 +33,7 @@ app.use('/',function(req,res,next){
 
 app.post('/message/social',function(req,res){
 	console.log(req.body.social);
-	res.send(req.body.social);
+	res.json(req.body.social);
 });
 
 app.put('/message/message_id',function(req,res){
@@ -41,7 +41,7 @@ app.put('/message/message_id',function(req,res){
 
 app.post('/account',function(req,res){
 	console.log(req.body.account);
-	res.send(req.body.account);
+	res.json(req.body.account);
 });
 
 app.get('/account/:username',function(req,res){
