@@ -26,7 +26,7 @@ app.post('/message/social',function(req,res){
 	res.json({social:req.body.social});
 });
 
-app.put('/message/message_id',function(req,res){
+app.put('/message/:message_id',function(req,res){
 });
 
 app.post('/account',function(req,res){
@@ -34,12 +34,12 @@ app.post('/account',function(req,res){
 	res.json({id:req.body.id, username:req.body.username});
 });
 
-app.get('/account/username',function(req,res){
+app.get('/account/:username',function(req,res){
 	res.send(Mex[req.param.username]);
 	console.log(Mex.account.username);
 });
 
-app.put('/account/id',function(req,res){
+app.put('/account/:id',function(req,res){
 });
 
 app.get('/show/message/message_id',function(req,res){
@@ -47,7 +47,7 @@ app.get('/show/message/message_id',function(req,res){
 	console.log(Mex.show.message.message_id);
 });
 
-app.get('/show/message/message_id/social',function(req,res){
+app.get('/show/message/message_id/:social',function(req,res){
 	res.send(Mex[req.param.social]);
 	console.log(Mex.show.message.message_id.social);
 });
