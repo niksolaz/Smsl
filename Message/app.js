@@ -41,7 +41,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/message',function(req,res){
+
 	var msg = req.body.message;
+	console.log('message',msg);
 	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
 		console.log(error);
@@ -52,13 +54,26 @@ app.post('/message',function(req,res){
 	});
 });
 
+app.get('/message/:message_id',function(req,res){
+	var msg_id = 620282325490880500;
+	console.log('message_id',msg_id);
+	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
+	if(error){
+		console.log(error);
+		throw error;
+	}
+	console.log(tweets);
+	res.json(tweet);
+	});
+});
+
+/*
 app.post('/message/social',function(req,res){
 	console.log(req.body.social);
 	res.json({social:req.body.social});
 });
+*
 
-app.put('/message/:message_id',function(req,res){
-});
 
 app.post('/account',function(req,res){
 	console.log(req.body.account);
@@ -82,7 +97,7 @@ app.get('/show/message/message_id/:social',function(req,res){
 	res.send(Mex[req.param.social]);
 	console.log(Mex.show.message.message_id.social);
 });
-
+*/
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
