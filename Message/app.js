@@ -29,7 +29,7 @@ app.post('/message',function(req,res){
 });
 
 app.get('/message/:message_id',function(req,res){
-	var msg_id = 620282325490880500;
+	var msg_id = 620280555452678100;
 	console.log('message_id',msg_id);
 	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
 	if(error){
@@ -37,7 +37,7 @@ app.get('/message/:message_id',function(req,res){
 		throw error;
 	}
 	console.log(tweets);
-	res.json(tweet);
+	res.json(tweets);
 	});
 });
 
