@@ -14,10 +14,11 @@ client.get('statuses/show',{id:103},function(error,tweets,response){
 	if(error) throw error;
 	console.log(tweets);
 });*/
+/*
 client.post('/statuses/update',{status:'I am Nicola'},function(error,tweet,response){
 	if(error) throw error;
 	console.log(tweet);
-});
+});*/
 //client.stream(path, params, callback);
 
 
@@ -39,6 +40,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
+app.post('/message',function(req,res){
+	var msg = req.body.message;
+	client.post('/statuses/update',{status:msg},function(error,tweet,response){
+	if(error){
+		console.log(error);
+		throw error;
+	}
+	console.log(tweet);
+	response.json(tweet);
+	});
+});
 
 app.post('/message/social',function(req,res){
 	console.log(req.body.social);
