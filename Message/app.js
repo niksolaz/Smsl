@@ -42,13 +42,13 @@ app.use(express.static(__dirname + '/public'));
 
 app.post('/message',function(req,res){
 	var msg = req.body.message;
-	client.post('/statuses/update',{status:msg},function(error,tweet,response){
+	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
 		console.log(error);
 		throw error;
 	}
 	console.log(tweet);
-	response.json(tweet);
+	res.json(tweet);
 	});
 });
 
