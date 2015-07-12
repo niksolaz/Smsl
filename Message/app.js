@@ -1,6 +1,25 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var Twitter = require('twitter');
 var app = express();
+
+var client = new Twitter({
+	consumer_key:process.env.Twitter_consumer_key,
+	consumer_secret:process.env.Twitter_consumer_secret,
+	access_token_key:process.env.Twitter_access_token_key,
+	access_token_secret:process.env.Twitter_access_token_secret
+});
+/*
+client.get('statuses/show',{id:103},function(error,tweets,response){
+	if(error) throw error;
+	console.log(tweets);
+});*/
+client.post('/statuses/update',{status:'I am Nicola'},function(error,tweet,response){
+	if(error) throw error;
+	console.log(tweet);
+});
+//client.stream(path, params, callback);
+
 
 var Mex = {
 	'account':{
