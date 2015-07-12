@@ -28,7 +28,7 @@ app.post('/message',function(req,res){
 	});
 });
 
-app.get('/message/:msg_id',function(req,res){
+app.get('/message/:message_id',function(req,res){
 	var msg_id = 620280555452678100;
 	console.log('message_id',msg_id);
 	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
