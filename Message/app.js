@@ -42,6 +42,17 @@ app.get('/message/:message_id',function(req,res){
 	});
 });
 
+app.get('/messages',function(req,res){
+	client.get('statuses/user_timeline',{user_id:user},function(error,tweets,response){
+	if(error){
+		console.log(error);
+		throw error;
+	}
+	console.log(tweets);
+	res.json(tweets);
+	});
+});
+
 
 var server = app.listen(3000, function () {
   var host = server.address().address;
