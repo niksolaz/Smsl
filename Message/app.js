@@ -1,8 +1,27 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Twitter = require('twitter');
-var app = express();
+//Database Mongodb connect with Mongoose
+var mongoose = require('mongoose');
+var db = mongoose.connect('mongodb://127.0.0.1:27017/msg_test');
 
+mongoose.connection.on('error',console.error.bind(console,'connection error: '));
+mongoose.connection.once('connected',function(){
+	console.log('Connected to Database');
+});
+// Example Schema 
+var msgSchema = mongoose.Schema({
+	user_id: Number, // Number because the id is  a number
+	message: String
+});
+
+var MSG = mongoose.model('MSG',msgSchema);
+//NOTE: with process.env.USER_ID register my id 
+var user = new MSG({user_id:process.env.USER_ID});
+console.log(user.user_id);
+
+var app = express();
+// Client Twitter
 var client = new Twitter({
 	consumer_key:process.env.TWITTER_CONSUMER_KEY,
 	consumer_secret:process.env.TWITTER_CONSUMER_SECRET,
@@ -43,6 +62,7 @@ app.get('/message/:message_id',function(req,res){
 });
 
 app.get('/messages',function(req,res){
+	//var user = process.env.USER_ID;
 	client.get('statuses/user_timeline',{user_id:user},function(error,tweets,response){
 	if(error){
 		console.log(error);
