@@ -34,8 +34,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/message',function(req,res){
-
-	var msg = req.body.message;
+	var msg = new MSG({
+		message:req.body.message
+	});
 	console.log('message',msg);
 	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
