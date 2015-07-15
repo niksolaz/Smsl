@@ -3,10 +3,10 @@ var bodyParser = require('body-parser');
 var Twitter = require('twitter');
 //Database Mongodb connect with Mongoose
 var mongoose = require('mongoose');
-var db = mongoose.connect('mongodb://127.0.0.1:27017/msg_test');
-
-mongoose.connection.on('error',console.error.bind(console,'connection error: '));
-mongoose.connection.once('connected',function(){
+mongoose.connect('mongodb://127.0.0.1:27017/msgGlobal/myMessage');
+var db = mongoose.connection;
+db.on('error',console.error.bind(console,'connection error: '));
+db.once('connected',function(){
 	console.log('Connected to Database');
 });
 // Example Schema 
@@ -34,15 +34,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 app.post('/message',function(req,res){
-	var msg = new MSG({
-		message:req.body.message
-	});
+	var msg = req.body.message;
 	console.log('message',msg);
 	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
 		console.log(error);
 		throw error;
 	}
+
+	var msgTweet = new MSG({message:msg}); //create new model 
+	console.log(msgTweet.message);
+	msgTweet.save(function(err){      //save the message in db
+		if(!err) return ('User saved successfully!');
+	});
 	console.log(tweet);
 	res.json(tweet);
 	});
