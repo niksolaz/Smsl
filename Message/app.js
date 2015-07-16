@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var Twitter = require('twitter');
 //Database Mongodb connect with Mongoose
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/msgGlobal/myMessage');
+mongoose.connect('mongodb://127.0.0.1:27017/msgGlobal/msgs');
 var db = mongoose.connection;
 db.on('error',console.error.bind(console,'connection error: '));
 db.once('connected',function(){
@@ -17,8 +17,8 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 //NOTE: with process.env.USER_ID register my id 
-var user = new MSG({user_id:process.env.USER_ID});
-console.log(user.user_id);
+var userTweet = new MSG({user_id:process.env.USER_ID});
+console.log(userTweet.user_id);
 
 var app = express();
 // Client Twitter
@@ -42,11 +42,12 @@ app.post('/message',function(req,res){
 		throw error;
 	}
 
-	var msgTweet = new MSG({message:msg}); //create new model 
-	console.log(msgTweet.message);
+	var msgTweet = new MSG({user_id:userTweet.user_id,message:msg}); //create new model 
+	console.log(msgTweet.user_id,msgTweet.message);
 	msgTweet.save(function(err){      //save the message in db
 		if(!err) return ('User saved successfully!');
 	});
+
 	console.log(tweet);
 	res.json(tweet);
 	});
@@ -55,14 +56,17 @@ app.post('/message',function(req,res){
 app.get('/message/:message_id',function(req,res){
 	var msg_id = req.params.message_id;
 	console.log('message_id',msg_id);
-	console.log(req.params.message_id);
+	//get a date from database
+	var msgDB = db.collection('msgs').find({_id:msg_id});
+	console.log('message: '+ msgDB.message);
 	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
 	if(error){
 		console.log(error);
 		throw error;
-	}
-	console.log(tweets);
-	res.json(tweets);
+	}	
+	
+	console.log(tweets.text);
+	res.json(tweets.text);
 	});
 });
 
