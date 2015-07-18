@@ -11,7 +11,7 @@ db.once('connected',function(){
 });
 // Example Schema 
 var msgSchema = mongoose.Schema({
-	user_id: Number, // Number because the id is  a number
+	user_id: {},
 	message: String
 });
 
@@ -56,15 +56,19 @@ app.post('/message',function(req,res){
 app.get('/message/:message_id',function(req,res){
 	var msg_id = req.params.message_id;
 	console.log('message_id',msg_id);
-	//get a date from database
-	var msgDB = db.collection('msgs').find({_id:msg_id});
-	console.log('message: '+ msgDB.message);
+	if(msg_id)
 	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
 	if(error){
 		console.log(error);
 		throw error;
-	}	
+	}
+	var checkIntoDB = function(){
+		var url=db.collection('msgs').findOne({_id:tweets.id_str})
+		console.log(url._id + url.message);
+	}
 	
+	
+
 	console.log(tweets.text);
 	res.json(tweets.text);
 	});
