@@ -11,8 +11,9 @@ db.once('connected',function(){
 });
 // Example Schema 
 var msgSchema = mongoose.Schema({
-	user_id: {},
-	message: String
+	user_id: Object,
+	message: String,
+	tweet_id:String
 });
 
 var MSG = mongoose.model('MSG',msgSchema);
@@ -36,14 +37,15 @@ app.use(express.static(__dirname + '/public'));
 app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
+	
 	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
 		console.log(error);
 		throw error;
 	}
 
-	var msgTweet = new MSG({user_id:userTweet.user_id,message:msg}); //create new model 
-	console.log(msgTweet.user_id,msgTweet.message);
+	var msgTweet = new MSG({user_id:userTweet.user_id,message:msg,tweet_id:tweet.id_str}); //create new model 
+	console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
 	msgTweet.save(function(err){      //save the message in db
 		if(!err) return ('User saved successfully!');
 	});
@@ -55,23 +57,23 @@ app.post('/message',function(req,res){
 
 app.get('/message/:message_id',function(req,res){
 	var msg_id = req.params.message_id;
-	console.log('message_id',msg_id);
-	if(msg_id)
-	client.get('statuses/show',{id:msg_id},function(error,tweets,response){
-	if(error){
-		console.log(error);
-		throw error;
-	}
-	var checkIntoDB = function(){
-		var url=db.collection('msgs').findOne({_id:tweets.id_str})
-		console.log(url._id + url.message);
-	}
-	
-	
+	console.log('message_id: ',msg_id);
+	var DB = db.collection('msgs').findOne({user_id:msg_id},function(err,data){
+		if(err) console.error(err);
+		console.log('AAA'+data);
 
-	console.log(tweets.text);
-	res.json(tweets.text);
-	});
+		client.get('statuses/show',{id:msg_id},function(error,tweets,response){
+		if(error){
+			console.log(error);
+			throw error;
+		}
+		console.log(tweets);
+		res.json(tweets);
+		});
+	})
+	console.log(DB);
+	
+	
 });
 
 app.get('/messages',function(req,res){
