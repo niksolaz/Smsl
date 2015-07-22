@@ -11,7 +11,7 @@ db.once('connected',function(){
 });
 // Example Schema 
 var msgSchema = mongoose.Schema({
-	_id:Object,
+	_id:String,
 	user_id: String,
 	message: String,
 	tweet_id:String
@@ -59,14 +59,21 @@ app.post('/message',function(req,res){
 app.get('/message/:message_id',function(req,res){
 	var msg_id = req.params.message_id;
 	console.log('message_id: ',msg_id);
-	var DB = db.collection('msgs').find(
-		{ _id: msg_id },
-		{ user_id: userTweet.user_id },
-		{ message: [Object] },
-		{ tweet_id: [Object] }
-		);
-	console.log(DB.message);
-	res.json(DB.message);
+	
+	db.collection('msgs',function (err,result){
+		if(err){
+			console.log('ERROR!!!!');
+			return;
+		}
+		result = MSG;
+		result.find({
+			'_id':msg_id
+		});
+		console.log(result._id);
+	});
+	
+	
+	
 /*
 		client.get('statuses/show',{id:msg_id},function(error,tweets,response){
 		if(error){
