@@ -66,10 +66,10 @@ app.get('/message/:message_id',function(req,res){
 		}
 		console.log('Result ',result);
 		client.get('statuses/show',{id:result.tweet_id},function(error,tweets,response){
-		if(error){
-			console.log(error);
-			throw error;
-		}
+			if(error){
+				console.log(error);
+				throw error;
+			}
 		console.log(tweets);
 		res.json(tweets);
 		});
