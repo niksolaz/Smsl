@@ -72,15 +72,16 @@ app.get('/message/:message_id',
 			},
 			function(msg1,callback){
 				db.collection('msgs').findOne({'_id':msg_id});
-				console.log('Second Step--> '+msg1.message);
-				callback(null,'two');
+				console.log('Second Step--> '+msg1);
+				callback(null,'two','three');
 			},
-			function(tweets,callback){
+			function(msg1,tweets,callback){
 				client.get('statuses/show',{id:msg1.tweet_id});
-				console.log('Third Step--> ' + tweets );
+				console.log('Third Step--> ' + msg1+' '+tweets );
 				callback(null,'Final Result');
 			}
 		], function(err,result){
+			if(err) return err;
 			console.log('Main callback: '+ result);
 			}
 		);
