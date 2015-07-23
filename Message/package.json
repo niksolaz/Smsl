@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "my social message  app",
   "dependencies": {
+    "async": "^1.4.0",
+    "async-waterfall": "^0.1.5",
     "body-parser": "^1.13.2",
     "express": "^4.10.2",
     "mongodb": "^2.0.37",
