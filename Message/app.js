@@ -60,16 +60,12 @@ app.get('/message/:message_id',function(req,res){
 	var msg_id = req.params.message_id;
 	console.log('message_id: ',msg_id);
 	
-	db.collection('msgs',function (err,result){
+	db.getCollection('msgs').findOne({'_id':msg_id},function (err,result){
 		if(err){
 			console.log('ERROR!!!!');
 			return;
 		}
-		result = MSG;
-		result.find({
-			'_id':msg_id
-		});
-		console.log(result._id);
+		console.log(result);
 	});
 	
 	
