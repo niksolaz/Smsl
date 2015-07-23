@@ -65,7 +65,7 @@ app.get('/message/:message_id',function(req,res){
 			console.log('ERROR!!!!');
 			return;
 		}
-		console.log(result);
+		console.log('Result ',result);
 	});
 	
 	
