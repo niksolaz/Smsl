@@ -64,7 +64,7 @@ app.get('/message/:message_id',function(req,res){
 			console.log('ERROR!!!!');
 			return;
 		}
-		console.log('Result ',result);
+		console.log('Result ',result.message);
 		client.get('statuses/show',{id:result.tweet_id},function(error,tweets,response){
 			if(error){
 				console.log(error);
