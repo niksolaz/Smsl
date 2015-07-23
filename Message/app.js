@@ -61,7 +61,7 @@ app.get('/message/:message_id',function(req,res){
 	
 	db.collection('msgs').findOne({'_id':msg_id},function (err,result){
 		if(err){
-			console.log('ERROR!!!!');
+			console.log('ERROR!!!!',err);
 			return;
 		}
 		console.log('Result ',result.message);
@@ -71,7 +71,7 @@ app.get('/message/:message_id',function(req,res){
 				throw error;
 			}
 			console.log(tweets.text);
-			res.json(tweets.text);
+			res.json(tweets);
 		});
 	});
 	
@@ -79,14 +79,23 @@ app.get('/message/:message_id',function(req,res){
 });
 
 app.get('/messages',function(req,res){
-	//var user = process.env.USER_ID;
-	client.get('statuses/user_timeline',{user_id:user},function(error,tweets,response){
-	if(error){
-		console.log(error);
-		throw error;
-	}
-	console.log(tweets);
-	res.json(tweets);
+	var user = mongoose.Types.String(process.env.USER_ID);
+	console.log('User  ',user);
+
+	db.collection('msgs').find({'user_id':user},function (err,result){
+		if(err){
+			console.log('ERROR!!!!',err);
+			return;
+		}
+		console.log('Results ',result.message);
+		client.get('statuses/user_timeline',{user_id:result.user_id},function(error,tweets,response){
+			if(error){
+				console.log(error);
+				throw error;
+			}
+			console.log(tweets.text);
+			res.json(tweets);
+		});
 	});
 });
 
