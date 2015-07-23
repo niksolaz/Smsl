@@ -70,8 +70,8 @@ app.get('/message/:message_id',function(req,res){
 				console.log(error);
 				throw error;
 			}
-		console.log(tweets.text);
-		res.json(tweets.text);
+			console.log(tweets.text);
+			res.json(tweets.text);
 		});
 	});
 	
