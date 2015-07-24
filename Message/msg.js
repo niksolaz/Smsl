@@ -67,19 +67,17 @@ app.get('/message/:message_id',
 
 		async.waterfall([
 			function(callback){
-				console.log('First Step');
-				callback(null,'one');
-			},
-			function(msg1,callback){
-				db.collection('msgs').findOne({'_id':msg_id},function(){
-					console.log('Second Step--> '+msg1);
-					callback(null,'two','three');
+				db.collection('msgs').findOne({'_id':msg_id},function(err,file){
+					if(err) callback(err);
+					console.log(file.message);
+					callback(null,file);
 				});
 			},
-			function(msg1,tweets,callback){
-				client.get('statuses/show',{id:msg1.tweet_id},function(){
-					console.log('Third Step--> ' + msg1+' '+tweets );
-					callback(null,'Final Result');
+			function(msg1,callback){
+				client.get('statuses/show',{id:msg1.tweet_id},function(err,tweets,response){
+					if(err) callback(err);
+					console.log(tweets.text);
+					callback(null,tweets);
 					
 				});
 			}
