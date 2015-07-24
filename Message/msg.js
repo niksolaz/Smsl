@@ -71,14 +71,16 @@ app.get('/message/:message_id',
 				callback(null,'one');
 			},
 			function(msg1,callback){
-				db.collection('msgs').findOne({'_id':msg_id});
-				console.log('Second Step--> '+msg1);
-				callback(null,'two','three');
+				db.collection('msgs').findOne({'_id':msg_id},function(err){
+					console.log('Second Step--> '+msg1);
+					callback(null,'two','three');
+				});
 			},
 			function(msg1,tweets,callback){
-				client.get('statuses/show',{id:msg1.tweet_id});
-				console.log('Third Step--> ' + msg1+' '+tweets );
-				callback(null,'Final Result');
+				client.get('statuses/show',{id:msg1.tweet_id},function(err){
+					console.log('Third Step--> ' + msg1+' '+tweets );
+					callback(null,'Final Result');
+				});
 			}
 		], function(err,result){
 			if(err) return err;
