@@ -51,21 +51,23 @@ app.post('/message',function(req,res){
 	console.log('message',msg);
 
 	console.log('PROGRAM START');
-	
+
 	async.waterfall([
 		function(callback){
 			client.post('statuses/update',{status:msg},function(err,tweet,response){
 				if(err) callback(err);
 				console.log(tweet);
 				callback(null,tweet);
+			});
 		},
-		function(msg1,callback){
+		function(msg1, callback){
 			var msgTweet = new MSG({user_id: userTweet.user_id, message: msg1.msg, tweet_id: tweet.id_str});
 			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
 			msgTweet.save(function(err,file){  
 				if(!err) return ('User saved successfully!');
 				callback(null,file);	
 			});
+			
 		}
 	], function(err,result){
 			 if(err) return err;
