@@ -49,27 +49,6 @@ app.use(express.static(__dirname + '/public'));
 app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
-<<<<<<< HEAD
-	
-	client.post('statuses/update',{status:msg},function(error,tweet,response){
-	if(error){
-		console.log(error);
-		throw error;
-	}
-
-	var msgTweet = new MSG({user_id:userTweet.user_id,message:msg,tweet_id:tweet.id_str}); //create new model 
-	console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
-	msgTweet.save(function(err){      //save the message in db
-		if(!err) return ('User saved successfully!');
-	});
-
-	console.log(tweet);
-	res.json(tweet);
-	});
-});
-
-
-=======
 
 	console.log('PROGRAM START');
 	
@@ -97,9 +76,6 @@ app.post('/message',function(req,res){
 	console.log('END PROGRAM');
 });
 
-
-
->>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
 app.get('/message/:message_id',
 
 	function(req,res){
@@ -127,32 +103,15 @@ app.get('/message/:message_id',
 			if(err) return err;
 			console.log('Main callback: '+ result);
 			res.json(result);
-<<<<<<< HEAD
-		});
-		console.log('END PROGRAM');
-});
-
-=======
 			}
 		);
 		console.log('END PROGRAM');
 });
 
 
->>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
 
   console.log('Example app listening at http://%s:%s', host, port);
-<<<<<<< HEAD
 });
-=======
-});
-
-
-
-
-
-
->>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
