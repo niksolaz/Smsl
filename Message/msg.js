@@ -39,23 +39,33 @@ app.use(express.static(__dirname + '/public'));
 app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
+
+	console.log('PROGRAM START');
 	
-	client.post('statuses/update',{status:msg},function(error,tweet,response){
-	if(error){
-		console.log(error);
-		throw error;
-	}
-
-	var msgTweet = new MSG({user_id:userTweet.user_id,message:msg,tweet_id:tweet.id_str}); //create new model 
-	console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
-	msgTweet.save(function(err){      //save the message in db
-		if(!err) return ('User saved successfully!');
-	});
-
-	console.log(tweet);
-	res.json(tweet);
-	});
+	async.waterfall([
+		function(callback){
+			client.post('statuses/update',{status:msg},function(err,tweet,response){
+				if(err) callback(err);
+				console.log(tweet);
+				callback(null,tweet);
+		},
+		function(msg1,callback){
+			var msgTweet = new MSG({user_id: userTweet.user_id, message: msg1.msg, tweet_id: tweet.id_str});
+			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
+			msgTweet.save(function(err,file){  
+				if(!err) return ('User saved successfully!');
+				callback(null,file);	
+			});
+		}
+	], function(err,result){
+			 if(err) return err;
+			 console.log('Main callback: '+ result);
+			 res.json(result);
+			}
+	);
+	console.log('END PROGRAM');
 });
+
 
 
 app.get('/message/:message_id',
@@ -68,14 +78,14 @@ app.get('/message/:message_id',
 		async.waterfall([
 			function(callback){
 				db.collection('msgs').findOne({'_id':msg_id},function(err,file){
-					if(err) callback(err);
+					if(err) return callback(err);
 					console.log(file.message);
 					callback(null,file);
 				});
 			},
 			function(msg1,callback){
 				client.get('statuses/show',{id:msg1.tweet_id},function(err,tweets,response){
-					if(err) callback(err);
+					if(err) return callback(err);
 					console.log(tweets.text);
 					callback(null,tweets);
 					
