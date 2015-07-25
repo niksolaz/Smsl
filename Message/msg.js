@@ -5,6 +5,7 @@ var async = require('async');
 
 //Database Mongodb connect with Mongoose
 var mongoose = require('mongoose');
+
 var mongoAddress = process.env.MONGO_ADDRESS; // e.g. 127.0.0.1
 var mongoAddressPort = process.env.MONGO_ADDRESS_PORT || 27017; // e.g. 27017
 var mongoColletion = process.env.MONGO_COLLECTION; // e.g. msgGlobal/msgs
@@ -48,6 +49,7 @@ app.use(express.static(__dirname + '/public'));
 app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
+<<<<<<< HEAD
 	
 	client.post('statuses/update',{status:msg},function(error,tweet,response){
 	if(error){
@@ -67,6 +69,37 @@ app.post('/message',function(req,res){
 });
 
 
+=======
+
+	console.log('PROGRAM START');
+	
+	async.waterfall([
+		function(callback){
+			client.post('statuses/update',{status:msg},function(err,tweet,response){
+				if(err) callback(err);
+				console.log(tweet);
+				callback(null,tweet);
+		},
+		function(msg1,callback){
+			var msgTweet = new MSG({user_id: userTweet.user_id, message: msg1.msg, tweet_id: tweet.id_str});
+			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
+			msgTweet.save(function(err,file){  
+				if(!err) return ('User saved successfully!');
+				callback(null,file);	
+			});
+		}
+	], function(err,result){
+			 if(err) return err;
+			 console.log('Main callback: '+ result);
+			 res.json(result);
+			}
+	);
+	console.log('END PROGRAM');
+});
+
+
+
+>>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
 app.get('/message/:message_id',
 
 	function(req,res){
@@ -94,13 +127,32 @@ app.get('/message/:message_id',
 			if(err) return err;
 			console.log('Main callback: '+ result);
 			res.json(result);
+<<<<<<< HEAD
 		});
 		console.log('END PROGRAM');
 });
 
+=======
+			}
+		);
+		console.log('END PROGRAM');
+});
+
+
+>>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
 
   console.log('Example app listening at http://%s:%s', host, port);
+<<<<<<< HEAD
 });
+=======
+});
+
+
+
+
+
+
+>>>>>>> 2ac94816c7f7edfa766d17e5e726b3cb96555173
