@@ -55,26 +55,37 @@ app.post('/message',function(req,res){
 	async.waterfall([
 		function(callback){
 			client.post('statuses/update',{status:msg},function(err,tweet,response){
-				if(err) callback(err);
+				if(err){
+					callback(true, "Error posting to Twitter"); // true => err
+					return;
+				}
+				
 				console.log(tweet);
 				callback(null,tweet);
 			});
 		},
 		function(tweet, callback){
-			var msgTweet = new MSG({user_id: userTweet, message: tweet.msg, tweet_id: tweet.id_str});
+			var msgTweet = new MSG({user_id: userTweet, message: msg, tweet_id: tweet.id_str});
 			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
 			msgTweet.save(function(err,file){  
-				if(!err) return ('User saved successfully!');
+				if(err){
+					callback(true, 'Error saving the user in MongoDB'); 
+					return;
+				}
+				
+				console.log("User has been saved successfully")
 				callback(null,file);	
 			});
 			
 		}
 	], function(err,result){
-			 if(err) return err;
-			 console.log('Main callback: '+ result);
-			 res.json(result);
-			}
-	);
+			 if(err) {
+			 	res.json({"error": result});
+			 }else{
+			 	console.log('Main callback: '+ result);
+			 	res.json(result);
+			 }
+	});
 	console.log('END PROGRAM');
 });
 
