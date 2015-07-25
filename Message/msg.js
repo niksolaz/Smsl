@@ -30,8 +30,8 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 //NOTE: with process.env.USER_ID register my id 
-var userTweet = new MSG({user_id:process.env.USER_ID});
-console.log(userTweet.user_id);
+var userTweet = process.env.USER_ID;
+console.log('USER_ID',userTweet);
 
 var app = express();
 
@@ -60,8 +60,8 @@ app.post('/message',function(req,res){
 				callback(null,tweet);
 			});
 		},
-		function(msg1, callback){
-			var msgTweet = new MSG({user_id: userTweet.user_id, message: msg1.msg, tweet_id: tweet.id_str});
+		function(tweet, callback){
+			var msgTweet = new MSG({user_id: userTweet, message: tweet.msg, tweet_id: tweet.id_str});
 			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
 			msgTweet.save(function(err,file){  
 				if(!err) return ('User saved successfully!');
