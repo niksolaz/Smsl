@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Twitter = require('twitter');
+var FB = require('fb');
 var async = require('async');
 
 //Database Mongodb connect with Mongoose
@@ -25,7 +26,8 @@ db.once('connected',function(){
 var msgSchema = mongoose.Schema({
 	user_id: String,
 	message: String,
-	tweet_id:String
+	tweet_id:String,
+	fb_id:String
 });
 
 var MSG = mongoose.model('MSG',msgSchema);
@@ -35,12 +37,14 @@ console.log('USER_ID',userTweet);
 
 var app = express();
 
+//Twitter
 var client = new Twitter({
 	consumer_key:process.env.TWITTER_CONSUMER_KEY,
 	consumer_secret:process.env.TWITTER_CONSUMER_SECRET,
 	access_token_key:process.env.TWITTER_ACCESS_TOKEN_KEY,
 	access_token_secret:process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -63,9 +67,20 @@ app.post('/message',function(req,res){
 				callback(null,tweet);
 			});
 		},
-		function(tweet, callback){
-			var msgTweet = new MSG({user_id: userTweet, message: msg, tweet_id: tweet.id_str});
-			console.log(msgTweet.user_id,msgTweet.message,msgTweet.tweet_id);
+		function(tweet,callback){
+			FB.setAccessToken('access_token');
+			FB.api('me/feed', 'post', { message: msg}, function (res) {
+				if(!res || res.error) {
+    				console.log(!res ? 'error occurred' : res.error);
+    				return;
+  				}
+  			console.log('Post Id: ' + res.id);
+  			callback(null,fb)
+			});
+		},
+		function(fb, callback){
+			var msgSocial = new MSG({user_id: userTweet, message: msg, tweet_id: fb.id_str, fb_id: fb.id_str});
+			console.log(msgSocial.user_id,msgSocial.message,msgSocial.tweet_id,msgSocial.fb_id);
 			msgTweet.save(function(err,file){  
 				if(err) {
 					callback(true,'Error saving the user in MongoDB');
