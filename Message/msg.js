@@ -32,8 +32,10 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 //NOTE: with process.env.USER_ID register my id 
-var userTweet = process.env.USER_ID;
-console.log('USER_ID',userTweet);
+var userTweet = process.env.USER_TW_ID;
+console.log('USER_TW_ID',userTweet);
+var userfb =process.env.USER_FB_ID;
+console.log('USER_FB_ID',userfb);
 
 var app = express();
 
@@ -67,10 +69,9 @@ app.post('/message',function(req,res){
 				callback(null,tweet);
 			});
 		},
-		function(tweet,callback){
-			//access token temporaneo
-			var access_token = 'CAAWx74E0ZBJEBAOH3baBpwXbNvKaLMz3aih8f3rupZBsYyaLVMChPdO03P9mLCWFWKKQouiI9CsByHFaRwbTIp27Gt531wQaJWxCvja1ld7acZAqiZAEN6YfJTf2yjU8g7xyWI5ZCGgpNGF6FKjMRnwiIgQiN0PYEZCNb7RyfGNXXAobtI6Oi70cLYhbNwCDqM4ZBUdU0E9rTkhvC9ZBm3Wi';
-			FB.setAccessToken(access_token);
+		function(callback){
+			
+			FB.setAccessToken(process.env.ACCEESS_TOKEN);
 			FB.api('me/feed', 'post', { message: msg}, function (res) {
 				if(!res || res.error) {
     				console.log(!res ? 'error occurred' : res.error);
@@ -81,7 +82,7 @@ app.post('/message',function(req,res){
 			});
 		},
 		function(fb, callback){
-			var msgSocial = new MSG({user_id: userTweet, message: msg, tweet_id: fb.id_str, fb_id: fb.id_str});
+			var msgSocial = new MSG({user_id: userTweet, message: msg, tweet_id: tweet.id_str, fb_id: userfb});
 			console.log(msgSocial.user_id,msgSocial.message,msgSocial.tweet_id,msgSocial.fb_id);
 			msgTweet.save(function(err,file){  
 				if(err) {
