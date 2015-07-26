@@ -68,7 +68,9 @@ app.post('/message',function(req,res){
 			});
 		},
 		function(tweet,callback){
-			FB.setAccessToken('access_token');
+			//access token temporaneo
+			var access_token = 'CAAWx74E0ZBJEBAOH3baBpwXbNvKaLMz3aih8f3rupZBsYyaLVMChPdO03P9mLCWFWKKQouiI9CsByHFaRwbTIp27Gt531wQaJWxCvja1ld7acZAqiZAEN6YfJTf2yjU8g7xyWI5ZCGgpNGF6FKjMRnwiIgQiN0PYEZCNb7RyfGNXXAobtI6Oi70cLYhbNwCDqM4ZBUdU0E9rTkhvC9ZBm3Wi';
+			FB.setAccessToken(access_token);
 			FB.api('me/feed', 'post', { message: msg}, function (res) {
 				if(!res || res.error) {
     				console.log(!res ? 'error occurred' : res.error);
