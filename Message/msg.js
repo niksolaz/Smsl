@@ -25,9 +25,10 @@ db.once('connected',function(){
 // Example Schema 
 var msgSchema = mongoose.Schema({
 	user_id: String,
+	user_fb_id: String,
 	message: String,
-	tweet_id:String,
-	fb_id:String
+	tweet_id: String,
+	fb_id: String
 });
 
 var MSG = mongoose.model('MSG',msgSchema);
@@ -69,21 +70,27 @@ app.post('/message',function(req,res){
 				callback(null,tweet);
 			});
 		},
-		function(callback){
+		function(tweet,callback){
 			
 			FB.setAccessToken(process.env.ACCEESS_TOKEN);
-			FB.api('me/feed', 'post', { message: msg}, function (res) {
-				if(!res || res.error) {
-    				console.log(!res ? 'error occurred' : res.error);
+			FB.api('/me/feed', 'post', {message:tweet.msg}, function (err,res) {
+				if(err) {
+    				console.log('Error posting Facebook');
     				return;
   				}
   			console.log('Post Id: ' + res.id);
   			callback(null,fb)
 			});
 		},
-		function(fb, callback){
-			var msgSocial = new MSG({user_id: userTweet, message: msg, tweet_id: tweet.id_str, fb_id: userfb});
-			console.log(msgSocial.user_id,msgSocial.message,msgSocial.tweet_id,msgSocial.fb_id);
+		function(fb,callback){
+			var msgSocial = new MSG({
+				user_tw_id: userTweet,
+				user_fb_id: userfb,
+				message: msg, 
+				tweet_id: tweet.id_str, 
+				fb_id: fb.id_str
+			});
+			console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
 			msgTweet.save(function(err,file){  
 				if(err) {
 					callback(true,'Error saving the user in MongoDB');
