@@ -57,7 +57,7 @@ app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
 
-	console.log('PROGRAM START');
+	console.log('PROGRAM STARøT');
 
 	async.waterfall([
 		function(callback){
@@ -73,7 +73,7 @@ app.post('/message',function(req,res){
 		function(tweet,callback){
 			
 			FB.setAccessToken(process.env.ACCESS_TOKEN);
-			FB.api('/me/feed', 'post', {message:msg}, function (res) {
+			FB.api('/me/feed', 'post',{message:msg}, function (res) {
 				if(!res || res.error) {
 					console.log(!res ? 'error occurred' : res.error);
     				console.log('Error posting Facebook');
@@ -89,8 +89,8 @@ app.post('/message',function(req,res){
 				user_tw_id: userTweet,
 				user_fb_id: userfb,
 				message: msg, 
-				tweet_id: tweet.id_str, 
-				fb_id: fb.id
+				tweet_id: id_str, 
+				fb_id: id
 			});
 			console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
 			msgTweet.save(function(err,file){  
