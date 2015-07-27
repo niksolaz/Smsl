@@ -73,15 +73,15 @@ app.post('/message',function(req,res){
 		function(tweet,callback){
 			
 			FB.setAccessToken(process.env.ACCESS_TOKEN);
-			FB.api('/me/feed', 'post',{message:msg}, function (res) {
+			FB.api('me/posts', 'post',{message:msg}, function (res) {
 				if(!res || res.error) {
 					console.log(!res ? 'error occurred' : res.error);
     				console.log('Error posting Facebook');
     				callback(true,res.error);
     				return;
   				}  					
-  			console.log('Post Id: ' + res.id);
-  			callback(null,res,tweet)
+  				console.log('Post Id: ' + res.id);
+  				callback(null,res)
 			});
 		},
 		function(tweet,callback){
