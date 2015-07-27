@@ -73,22 +73,22 @@ app.post('/message',function(req,res){
 		function(tweet,callback){
 			
 			FB.setAccessToken(process.env.ACCEESS_TOKEN);
-			FB.api('/me/feed', 'post', {message:tweet.msg}, function (err,res) {
+			FB.api('/me/feed', 'post', {message:msg}, function (err,res) {
 				if(err) {
     				console.log('Error posting Facebook');
     				return;
-  				}
+  				}  					
   			console.log('Post Id: ' + res.id);
-  			callback(null,fb)
+  			callback(null,fb,tweet)
 			});
 		},
-		function(fb,callback){
+		function(fb,tweet,callback){
 			var msgSocial = new MSG({
 				user_tw_id: userTweet,
 				user_fb_id: userfb,
 				message: msg, 
 				tweet_id: tweet.id_str, 
-				fb_id: fb.id_str
+				fb_id: fb.id
 			});
 			console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
 			msgTweet.save(function(err,file){  
