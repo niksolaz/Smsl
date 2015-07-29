@@ -89,11 +89,11 @@ app.post('/message',function(req,res){
 				user_tw_id: userTweet,
 				user_fb_id: userfb,
 				message: msg, 
-				tweet_id: id_str, 
-				fb_id: id
+				tweet_id: tweet.id_str, 
+				fb_id: res.id
 			});
 			console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
-			msgTweet.save(function(err,file){  
+			msgSocial.save(function(err,file){  
 				if(err) {
 					callback(true,'Error saving the user in MongoDB');
 					return;
