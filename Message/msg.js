@@ -134,13 +134,13 @@ app.get('/message/:message_id',
 				client.get('statuses/show',{id:msg1.tweet_id},function(err,tweets,response){
 					if(err) return callback(err);
 					console.log('From Twitter: '+tweets.text);
-					callback(null,tweets);
+					callback(null,msg1,tweets);
 					
 				});
 			},
-			function(fbStatus,callback){
+			function(mongoObj,tweets,callback){
 				FB.setAccessToken(process.env.ACCESS_TOKEN);
-				FB.api('me',{posts:[{'message':fbStatus.fb_id}],accessToken:process.env.ACCESS_TOKEN}, function (res) {
+				FB.api('me',{posts:[{'id':mongoObj.fb_id}],accessToken:process.env.ACCESS_TOKEN}, function (res) {
   					if(!res || res.error) {
    						console.log(!res ? 'error occurred' : res.error);
    						console.log('Error posting Facebook');
@@ -148,8 +148,16 @@ app.get('/message/:message_id',
    						return;
   					}
   					console.log('From Facebook: '+res);
-  					callback(true,fbStatus,res);
+  					callback(null,mongoObj,tweets,res);
 				});
+			},
+			function(mongoResult,twitterResult,facebookResult,callback){
+				var theResult = {
+					db: mongoResult,
+					twitter: twitterResult,
+					facebook: facebookResult
+				};
+				callback(null,theResult);
 			}
 		], function(err,result){
 			if(err) return err;
