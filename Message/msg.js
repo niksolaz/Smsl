@@ -81,16 +81,16 @@ app.post('/message',function(req,res){
     				return;
   				}  					
   				console.log('Post Id: ' + res.id);
-  				callback(null,res)
+  				callback(null,tweet,res)
 			});
 		},
-		function(tweet,callback){
+		function(tweet,fbStatus,callback){
 			var msgSocial = new MSG({
 				user_tw_id: userTweet,
 				user_fb_id: userfb,
 				message: msg, 
 				tweet_id: tweet.id_str, 
-				fb_id: res.id
+				fb_id: fbStatus.id
 			});
 			console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
 			msgSocial.save(function(err,file){  
@@ -126,16 +126,29 @@ app.get('/message/:message_id',
 			function(callback){
 				db.collection('msgs').findOne({'_id':msg_id},function(err,file){
 					if(err) return callback(err);
-					console.log(file.message);
+					console.log('From DB: '+file.message);
 					callback(null,file);
 				});
 			},
 			function(msg1,callback){
 				client.get('statuses/show',{id:msg1.tweet_id},function(err,tweets,response){
 					if(err) return callback(err);
-					console.log(tweets.text);
+					console.log('From Twitter: '+tweets.text);
 					callback(null,tweets);
 					
+				});
+			},
+			function(fbStatus,callback){
+				FB.setAccessToken(process.env.ACCESS_TOKEN);
+				FB.api('me/posts',{data:['message','id'],accessToken:process.env.ACCESS_TOKEN}, function (res) {
+  					if(!res || res.error) {
+   						console.log(!res ? 'error occurred' : res.error);
+   						console.log('Error posting Facebook');
+    					callback(true,res.error);
+   						return;
+  					}
+  					console.log('From Facebook: '+res.message);
+  					callback(true,fbStatus,res);
 				});
 			}
 		], function(err,result){
