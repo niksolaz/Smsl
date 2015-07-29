@@ -140,14 +140,14 @@ app.get('/message/:message_id',
 			},
 			function(fbStatus,callback){
 				FB.setAccessToken(process.env.ACCESS_TOKEN);
-				FB.api('me/posts',{data:['message','id'],accessToken:process.env.ACCESS_TOKEN}, function (res) {
+				FB.api('me',{posts:[{'message':fbStatus.fb_id}],accessToken:process.env.ACCESS_TOKEN}, function (res) {
   					if(!res || res.error) {
    						console.log(!res ? 'error occurred' : res.error);
    						console.log('Error posting Facebook');
     					callback(true,res.error);
    						return;
   					}
-  					console.log('From Facebook: '+res.message);
+  					console.log('From Facebook: '+res);
   					callback(true,fbStatus,res);
 				});
 			}
