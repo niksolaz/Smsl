@@ -140,7 +140,7 @@ app.get('/message/:message_id',
 			},
 			function(mongoObj,tweets,callback){
 				FB.setAccessToken(process.env.ACCESS_TOKEN);
-				FB.api('me',{posts:[{'id':mongoObj.fb_id}],accessToken:process.env.ACCESS_TOKEN}, function (res) {
+				FB.api(mongoObj.fb_id,{posts:[{'id':mongoObj.fb_id}],accessToken:process.env.ACCESS_TOKEN}, function (res) {
   					if(!res || res.error) {
    						console.log(!res ? 'error occurred' : res.error);
    						console.log('Error posting Facebook');
