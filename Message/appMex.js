@@ -22,7 +22,29 @@ app.post('/message',function(req,res){
 	console.log('message',msg);
 
 	console.log('PROGRAM START');
-	async.waterfall([]);
+
+	async.waterfall([
+		function(callback){
+			console.log(TwitterModel.post);
+			callback(null,tweet);
+		},
+		function(tweet,callback){
+			console.log(FacebookModel.post);
+			callback(null,tweet,res);
+		},
+		function(tweet,fbStatus,callback){
+			console.log(DatabaseModel.post);
+			callback(null,file);
+		}
+		], function(err,result){
+				if(err){
+					res.json({'error':result});
+				}else{
+					console.log('Main callback: '+ result);
+			 		res.json(result);
+				}
+			}
+	);
 	console.log('END PROGRAM');
 });
 	
