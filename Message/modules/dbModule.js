@@ -1,3 +1,4 @@
+
 //Database Mongodb connect with Mongoose
 var mongoose = require('mongoose');
 
@@ -27,6 +28,9 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 
+var TwModel = require('./twModule');
+var FbModel = require('./fbModule');
+
 database.get = function(callback){
 					db.collection('msgs').findOne({'_id':msg_id},function(err,file){
 						if(err) return callback(err);
@@ -37,8 +41,8 @@ database.get = function(callback){
 
 database.post = function(tweet,fbStatus,callback){
 					var msgSocial = new MSG({
-						user_tw_id: userTweet,
-						user_fb_id: userfb,
+						user_tw_id: TwModel.userTweet,
+						user_fb_id: FbModel.userfb,
 						message: msg, 
 						tweet_id: tweet.id_str, 
 						fb_id: fbStatus.id

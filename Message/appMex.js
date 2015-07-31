@@ -51,8 +51,36 @@ app.post('/message',function(req,res){
 
 app.get('/message/:message_id',function(req,res){
 	var msg_id = mongoose.Types.ObjectId(req.params.message_id);
+
 	console.log('PROGRAM START');
-	async.waterfall([]);
+
+	async.waterfall([
+		function(callback){
+			console.log(DatabaseModel.get);
+			callback(null,file);
+		},
+		function(msg1,callback){
+			console.log(TwitterModel.get);
+			callback(null,mongoObj,tweets,res);
+		},
+		function(mongoObj,tweets,callback){
+			console.log(FacebookModel.get);
+			callback(null,theResult);
+		},
+		function(mongoResult,twitterResult,facebookResult,callback){
+				var theResult = {
+					db: mongoResult,
+					twitter: twitterResult,
+					facebook: facebookResult
+				};
+				callback(null,theResult);
+		}
+		],function(err,result){
+			if(err) return err;
+				console.log('Main callback: '+ result);
+				res.json(result);
+			}
+	);
 	console.log('END PROGRAM');
 });
 
