@@ -26,3 +26,33 @@ var msgSchema = mongoose.Schema({
 });
 
 var MSG = mongoose.model('MSG',msgSchema);
+
+database.get = function(callback){
+					db.collection('msgs').findOne({'_id':msg_id},function(err,file){
+						if(err) return callback(err);
+						console.log('From DB: '+file.message);
+						callback(null,file);
+					});
+};
+
+database.post = function(tweet,fbStatus,callback){
+					var msgSocial = new MSG({
+						user_tw_id: userTweet,
+						user_fb_id: userfb,
+						message: msg, 
+						tweet_id: tweet.id_str, 
+						fb_id: fbStatus.id
+					});
+					console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
+					msgSocial.save(function(err,file){  
+						if(err) {
+							callback(true,'Error saving the user in MongoDB');
+							return;
+						}
+						console.log('User saved successfully!')
+						callback(null,file);	
+					});
+			
+};
+
+module.exports = database;
