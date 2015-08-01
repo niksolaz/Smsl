@@ -1,8 +1,4 @@
-
-var express = require('express');
 var Twitter = require('twitter');
-var dbModule = require('./dbModule');
-var fbModule = require('./fbModule');
 
 var client = new Twitter({
 	consumer_key:process.env.TWITTER_CONSUMER_KEY,
@@ -18,24 +14,49 @@ module.exports.userTweet = function(){
 	return userTweet;
 };
 
-module.exports.get = function(msg, callback){
-	client.get('statuses/show',{ id:msg.tweet_id },function( err, tweet, response){
-		if(err) return callback(err);
+module.exports.get = function( tweetId, moduleCallback){
+	var result = {
+		success: true,
+		data: null,
+		error: null
+	};
+	
+	client.get('statuses/show',{ id: tweetId },function( err, tweet, response){
+		if( err ){
+			console.log("(Twitter) Error loading a tweet...");
+			result.success = false;
+			result.error = err;
+			moduleCallback( result );
+			return;
+		}
 		
 		console.log('(Twitter) Returning the tweets: ' + JSON.stringify(tweet));
-		callback( null, msg, tweet);
-		
+		result.success = true;
+		result.data = tweet;
+		moduleCallback( result );
 	});
 };
 
-module.exports.post = function(msg, callback){
-	client.post('statuses/update', { status:msg }, function( err, tweet, response){
-		if(err) {
-			callback(true,'Error posting Twitter');
+module.exports.post = function( twitterStatus, moduleCallback){
+	var result = {
+		success: true,
+		data: null,
+		error: null
+	};
+	
+	client.post('statuses/update', { status: twitterStatus }, function( err, tweet, response){
+		if( err ){
+			console.log("(Twitter) Error posting a tweet...");
+			result.success = false;
+			result.error = err;
+			moduleCallback( result );
 			return;
 		}
 		console.log("(Twitter) Returning the tweet", JSON.stringify(tweet));
-		callback(null,tweet);
+		
+		result.success = true;
+		result.data = tweet;
+		moduleCallback( result );
 	});
 };
 
