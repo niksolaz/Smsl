@@ -1,7 +1,8 @@
 
 var express = require('express');
 var FB = require('fb');
-var database = require('./dbModule');
+var dbModule = require('./dbModule');
+var twModule = require('./twModule');
 
 
 module.exports.userfb = function(){

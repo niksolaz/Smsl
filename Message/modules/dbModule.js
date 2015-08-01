@@ -28,8 +28,8 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 
-var TwModel = require('./twModule');
-var FbModel = require('./fbModule');
+var twModule = require('./twModule');
+var fbModule = require('./fbModule');
 
 module.exports.get = function(callback){
 					db.collection('msgs').findOne({'_id':msg_id},function(err,file){

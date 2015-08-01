@@ -1,7 +1,8 @@
 
 var express = require('express');
 var Twitter = require('twitter');
-var database = require('./dbModule');
+var dbModule = require('./dbModule');
+var fbModule = require('./fbModule');
 
 var client = new Twitter({
 	consumer_key:process.env.TWITTER_CONSUMER_KEY,

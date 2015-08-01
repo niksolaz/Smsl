@@ -6,7 +6,6 @@ var FB = require('fb');
 var async = require('async');
 var mongoose = require('mongoose');
 
-var modules = require('/modules');
 var DatabaseModel = require('./modules/dbModule');
 var TwitterModel = require('./modules/twModule');
 var FacebookModel = require('./modules/fbModule');
@@ -17,9 +16,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-app.use('/dbModule',DatabaseModel);
-app.use('/twModule',TwitterModel),
-app.use('/fbModule',FacebookModel);
 
 app.post('/message',function(req,res){
 	var msg = req.body.message;
@@ -29,16 +25,8 @@ app.post('/message',function(req,res){
 
 	async.waterfall([
 		function(callback){
-			console.log(TwitterModel.post);
-			callback(null,tweet);
-		},
-		function(tweet,callback){
-			console.log(FacebookModel.post);
-			callback(null,tweet,res);
-		},
-		function(tweet,fbStatus,callback){
-			console.log(DatabaseModel.post);
-			callback(null,file);
+			console.log(DatabaseModel,TwitterModel,FacebookModel);
+			callback(null,DatabaseModel,TwitterModel,FacebookModel);
 		}
 		], function(err,result){
 				if(err){
@@ -60,22 +48,14 @@ app.get('/message/:message_id',function(req,res){
 
 	async.waterfall([
 		function(callback){
-			console.log(DatabaseModel.get);
-			callback(null,file);
+			console.log(DatabaseModel,TwitterModel,FacebookModel);
+			callback(null,DatabaseModel,TwitterModel,FacebookModel);
 		},
-		function(msg1,callback){
-			console.log(TwitterModel.get);
-			callback(null,mongoObj,tweets,res);
-		},
-		function(mongoObj,tweets,callback){
-			console.log(FacebookModel.get);
-			callback(null,theResult);
-		},
-		function(mongoResult,twitterResult,facebookResult,callback){
+		function(DatabaseModel,TwitterModel,FacebookModel,callback){
 				var theResult = {
-					db: mongoResult,
-					twitter: twitterResult,
-					facebook: facebookResult
+					db: DatabaseModel,
+					twitter: TwitterModel,
+					facebook: FacebookModel
 				};
 				callback(null,theResult);
 		}
