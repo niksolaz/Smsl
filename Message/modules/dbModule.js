@@ -28,34 +28,64 @@ var msgSchema = mongoose.Schema({
 
 var MSG = mongoose.model('MSG',msgSchema);
 
-var twModule = require('./twModule');
-var fbModule = require('./fbModule');
-
-module.exports.get = function(callback){
-					db.collection('msgs').findOne({'_id':msg_id},function(err,file){
-						if(err) return callback(err);
-						console.log('From DB: '+file.message);
-						callback(null,file);
-					});
+module.exports.get = function( databaseId, moduleCallback ){
+	
+	var result = {
+		success: true, 
+		data: null,
+		error: null
+	};
+	
+	db.collection('msgs').findOne(
+		{
+			'_id':databaseId
+		},
+		function(err,file){
+			if(err){
+				console.log('Error read Database...');
+				result.success = false;
+				result.error = err;
+				moduleCallback(result);
+				return;
+			}
+			console.log('From Database: '+ JSON.stringify(file));
+			result.success = true;
+			result.data = file;
+			moduleCallback( result );
+		}
+	);
 };
 
-module.exports.post = function(tweet,fbStatus,callback){
-					var msgSocial = new MSG({
-						user_tw_id: TwModel.userTweet,
-						user_fb_id: FbModel.userfb,
-						message: msg, 
-						tweet_id: tweet.id_str, 
-						fb_id: fbStatus.id
-					});
-					console.log(msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id);
-					msgSocial.save(function(err,file){  
-						if(err) {
-							callback(true,'Error saving the user in MongoDB');
-							return;
-						}
-						console.log('User saved successfully!')
-						callback(null,file);	
-					});
+module.exports.post = function( databaseMessage, moduleCallback ){
+	var result = {
+		success: true,
+		data: null,
+		error: null
+	};
+	
+	var msgSocial = new MSG({
+		user_tw_id: process.env.USER_TW_ID,
+		user_fb_id: process.env.USER_FB_ID,
+		message: databaseMessage.message, 
+		tweet_id: databaseMessage.id_str, 
+		fb_id: databaseMessage.id
+	});
+	
+	console.log( msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id );
+	
+	msgSocial.save( function( err, file ){  
+		if( err ) {
+			console.log( "(Database) Error saving the user in Database" );
+			result.success = false;
+			result.error = err;
+			moduleCallback( result );
+			return;
+		}
+		console.log( "(Database) User saved successfully" );
+		result.success = true;
+		result.data = file;
+		moduleCallback( result );	
+	});
 			
 };
 
