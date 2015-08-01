@@ -6,16 +6,20 @@ var FB = require('fb');
 var async = require('async');
 var mongoose = require('mongoose');
 
+var modules = require('/modules');
 var DatabaseModel = require('./modules/dbModule');
-var FacebookModel = require('./modules/fbModule');
 var TwitterModel = require('./modules/twModule');
+var FacebookModel = require('./modules/fbModule');
 
+var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-var app = express();
+app.use('/dbModule',DatabaseModel);
+app.use('/twModule',TwitterModel),
+app.use('/fbModule',FacebookModel);
 
 app.post('/message',function(req,res){
 	var msg = req.body.message;
