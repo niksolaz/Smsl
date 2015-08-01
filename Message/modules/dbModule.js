@@ -31,7 +31,7 @@ var MSG = mongoose.model('MSG',msgSchema);
 var TwModel = require('./twModule');
 var FbModel = require('./fbModule');
 
-database.get = function(callback){
+module.exports.get = function(callback){
 					db.collection('msgs').findOne({'_id':msg_id},function(err,file){
 						if(err) return callback(err);
 						console.log('From DB: '+file.message);
@@ -39,7 +39,7 @@ database.get = function(callback){
 					});
 };
 
-database.post = function(tweet,fbStatus,callback){
+module.exports.post = function(tweet,fbStatus,callback){
 					var msgSocial = new MSG({
 						user_tw_id: TwModel.userTweet,
 						user_fb_id: FbModel.userfb,
@@ -59,4 +59,3 @@ database.post = function(tweet,fbStatus,callback){
 			
 };
 
-module.exports = database;
