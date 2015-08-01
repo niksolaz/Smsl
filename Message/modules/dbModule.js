@@ -36,9 +36,10 @@ module.exports.get = function( databaseId, moduleCallback ){
 		error: null
 	};
 	
+	var dbId = var msg_id = mongoose.Types.ObjectId(databaseId);
 	db.collection('msgs').findOne(
 		{
-			'_id':databaseId
+			'_id':dbId
 		},
 		function(err,file){
 			if(err){
