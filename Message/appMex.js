@@ -1,14 +1,12 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
-var Twitter = require('twitter');
-var FB = require('fb');
 var async = require('async');
 var mongoose = require('mongoose');
 
-var DatabaseModel = require('./modules/dbModule');
-var TwitterModel = require('./modules/twModule');
-var FacebookModel = require('./modules/fbModule');
+var DatabaseModule = require('./modules/dbModule');
+var TwitterModule = require('./modules/twModule');
+var FacebookModule = require('./modules/fbModule');
 
 var app = express();
 
@@ -23,10 +21,57 @@ app.post('/message',function(req,res){
 
 	console.log('PROGRAM START');
 
+
 	async.waterfall([
-		function(callback){
-			console.log(DatabaseModel,TwitterModel,FacebookModel);
-			callback(null,DatabaseModel,TwitterModel,FacebookModel);
+		// Create Twitter message
+		function ( next ){
+			console.log( "(App Mex) message by Twitter" );
+			TwitterModule.post( msg, function twitterCallback( resultData ){
+				if ( resultData.success === false ){
+					next( true, resultData.error );
+					return;
+				}
+				var twitterId = resultData.data ? resultData.data.id_str : null;
+				next( null, resultData.data );
+			});
+		},
+		// Create Facebook message
+		function ( twitterId, next){
+			if( !twitterId ){
+				next( true,"(App Mex) Error retrieving twitter data...");
+				return;
+			}
+			
+			FacebookModule.post( msg, function facebookCallback( resultData ){
+				if(resultData.success === false){
+					next( true, resultData.error);
+					return;
+				}
+				var facebookResult = resultData.data;
+				var facebookId = resultData.data ? resultData.data.id : null;
+				next(null, twitterId, facebookId);
+			});
+		},
+		function (twitterId, facebookId, next){
+			if( !facebookId ) {
+				next( true,"(App Mex) Error retrieving facebook data..");
+				return;
+			}
+			
+			var dataToSave = {
+				message: msg,
+				tweet_id: twitterId,
+				fb_id: facebookId
+			};
+			
+			DatabaseModule(dataToSave, function databaseCallback( resultData){
+				if(resultData.success === false){
+					next( true, resultData.error);
+					return;
+				}
+				var databaseResult = resultData.data;
+				next( null, databaseResult);
+			});
 		}
 		], function(err,result){
 				if(err){
@@ -42,28 +87,77 @@ app.post('/message',function(req,res){
 	
 
 app.get('/message/:message_id',function(req,res){
-	var msg_id = mongoose.Types.ObjectId(req.params.message_id);
-
+	var messageId = req.params.message_id;
 	console.log('PROGRAM START');
 
 	async.waterfall([
-		function(callback){
-			console.log(DatabaseModel,TwitterModel,FacebookModel);
-			callback(null,DatabaseModel,TwitterModel,FacebookModel);
-		},
-		function(DatabaseModel,TwitterModel,FacebookModel,callback){
-				var theResult = {
-					db: DatabaseModel,
-					twitter: TwitterModel,
-					facebook: FacebookModel
+		function(next){
+			// Database call
+			console.log("(AppMex) Fetching a database record by ID");
+			DatabaseModule.get(messageId, function databaseCallback( resultData ){
+				if ( resultData.success === false){
+					// Error calling the database
+					next( true, resultData.error );
+					return;
 				};
-				callback(null,theResult);
-		}
-		],function(err,result){
-			if(err) return err;
-				console.log('Main callback: '+ result);
-				res.json(result);
+				
+				next(null, resultData.data); // <- Result from the database "resultData.data"
+			});
+		},
+		function(databaseResult, next){
+			// Twitter call
+			if ( !databaseResult || !databaseResult.tweet_id ){
+				next(true, "(App Mex) Error retrieving the tweet_id from the database...");
+				return;
+			} 
+			
+			var tweet_id = databaseResult.tweet_id;
+			TwitterModule.get(tweet_id, function twitterCallback( resultData ){ 
+				if ( resultData.success === false){ // Error retrieving the tweet from Twitter
+					// Error calling the database
+					next( true, resultData.error );
+					return;
+				};
+				
+				var twitterResult = resultData.data;
+				next(null, databaseResult, twitterResult);
+			});
+		},
+		function(databaseResult, twitterResult, next){
+			/// TODO: Facebook call
+			if ( !databaseResult || !databaseResult.fb_id ){
+				next( true, "(App Mex) Error retrieving the fb_id from the database...");
+				return;
 			}
+			
+			var fb_id = databaseResult.fb_id;
+			FacebookModule.get(fb_id, function facebookCallback( resultData ){
+				if( resultData.success === false){ //Error retrieving the tweet from Facebook
+					// Error calling the database
+					next( true, resultData.error);
+					return;
+				}
+				
+				var facebookResult = resultData.data;
+				next(null,databaseResult, twitterResult, facebookResult);
+			});
+		},
+		function(databaseResult, twitterResult, facebookResult, next){
+			var finalResult = {
+				db: databaseResult, 
+				twitter: twitterResult,
+				facebook: facebookResult
+			}
+			next(null, finalResult);
+		}],
+		function(err,result){ //<- Final function. It will return the result to the client
+			if(err){
+				res.json(err);
+				return;
+			}
+				
+			res.json(result);
+		}
 	);
 	console.log('END PROGRAM');
 });
