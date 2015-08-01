@@ -13,27 +13,29 @@ var client = new Twitter({
 
 module.exports.userTweet = function(){
 	var userTweet = process.env.USER_TW_ID;
-	console.log('USER_TW_ID',userTweet);
+	
+	console.log('(Twitter) Twitter id: ', userTweet);
 	return userTweet;
 };
 
-module.exports.get = function(msg1,callback){
-				client.get('statuses/show',{id:msg1.tweet_id},function(err,tweets,response){
-					if(err) return callback(err);
-					console.log('From Twitter: '+tweets.text);
-					callback(null,msg1,tweets);
-					
-				});
+module.exports.get = function(msg, callback){
+	client.get('statuses/show',{ id:msg.tweet_id },function( err, tweet, response){
+		if(err) return callback(err);
+		
+		console.log('(Twitter) Returning the tweets: ' + JSON.stringify(tweet));
+		callback( null, msg, tweet);
+		
+	});
 };
 
-module.exports.post = function(callback){
-				client.post('statuses/update',{status:msg},function(err,tweet,response){
-					if(err) {
-						callback(true,'Error posting Twitter');
-						return;
-					}
-					console.log(tweet);
-					callback(null,tweet);
-				});
+module.exports.post = function(msg, callback){
+	client.post('statuses/update', { status:msg }, function( err, tweet, response){
+		if(err) {
+			callback(true,'Error posting Twitter');
+			return;
+		}
+		console.log("(Twitter) Returning the tweet", JSON.stringify(tweet));
+		callback(null,tweet);
+	});
 };
 
