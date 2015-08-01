@@ -36,7 +36,7 @@ module.exports.get = function( databaseId, moduleCallback ){
 		error: null
 	};
 	
-	var dbId = var msg_id = mongoose.Types.ObjectId(databaseId);
+	var dbId = mongoose.Types.ObjectId(databaseId);
 	db.collection('msgs').findOne(
 		{
 			'_id':dbId
@@ -68,8 +68,8 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		user_tw_id: process.env.USER_TW_ID,
 		user_fb_id: process.env.USER_FB_ID,
 		message: databaseMessage.message, 
-		tweet_id: databaseMessage.id_str, 
-		fb_id: databaseMessage.id
+		tweet_id: databaseMessage.tweet_id, 
+		fb_id: databaseMessage.fb_id
 	});
 	
 	console.log( msgSocial.user_tw_id, msgSocial.user_fb_id, msgSocial.message, msgSocial.tweet_id, msgSocial.fb_id );
