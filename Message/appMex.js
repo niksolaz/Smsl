@@ -134,6 +134,8 @@ app.get('/message/:message_id',function(req,res){
 			}
 			
 			var fb_id = databaseResult.fb_id;
+			console.log("The facebook id is ", fb_id)
+			console.log(JSON.stringify(databaseResult));
 			FacebookModule.get(fb_id, function facebookCallback( resultData ){
 				if( resultData.success === false){ //Error retrieving the tweet from Facebook
 					// Error calling the database
@@ -155,7 +157,7 @@ app.get('/message/:message_id',function(req,res){
 		}],
 		function(err,result){ //<- Final function. It will return the result to the client
 			if(err){
-				res.json(err);
+				res.json({ is_error: err, error: result});
 				return;
 			}
 				
