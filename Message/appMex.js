@@ -47,8 +47,11 @@ app.post('/message',function(req,res){
 					next( true, resultData.error);
 					return;
 				}
+			
 				var facebookResult = resultData.data;
 				var facebookId = resultData.data ? resultData.data.id : null;
+				console.log('FacebbokID = ....'+facebookId);
+				
 				next(null, twitterId, facebookId);
 			});
 		},
