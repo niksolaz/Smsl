@@ -53,7 +53,7 @@ app.post('/message',function(req,res){
 			});
 		},
 		function (twitterId, facebookId, next){
-			if( !facebookId ) {
+			if( !twitterId || !facebookId) {
 				next( true,"(App Mex) Error retrieving facebook data..");
 				return;
 			}
