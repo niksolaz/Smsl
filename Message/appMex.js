@@ -68,7 +68,7 @@ app.post('/message',function(req,res){
 				fb_id: facebookId
 			};
 			
-			DatabaseModule(dataToSave, function databaseCallback( resultData){
+			DatabaseModule.post(dataToSave, function databaseCallback( resultData){
 				if(resultData.success === false){
 					next( true, resultData.error);
 					return;
