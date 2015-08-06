@@ -32,6 +32,7 @@ app.post('/message',function(req,res){
 					return;
 				}
 				var twitterId = resultData.data ? resultData.data.id_str : null;
+				console.log('Twitter..........'+twitterId);
 				next( null, resultData.data );
 			});
 		},
@@ -50,9 +51,9 @@ app.post('/message',function(req,res){
 			
 				var facebookResult = resultData.data;
 				var facebookId = resultData.data ? resultData.data.id : null;
-				console.log('FacebbokID = ....'+facebookId);
+				console.log('FacebbokID = ....'+facebookResult);
 				
-				next(null, twitterId, facebookId);
+				next(null, twitterId, facebookResult);
 			});
 		},
 		function (twitterId, facebookId, next){

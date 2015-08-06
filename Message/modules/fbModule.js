@@ -63,14 +63,15 @@ module.exports.post = function ( facebookStatus, moduleCallback ){
    			moduleCallback(result);
    			return;
   		}					
-  		console.log('(Facebook) Post Id: ' + res.id);
+  		console.log('(Facebook) Returning Facebook: ' + JSON.stringify(res));
   		
   		// Format successful data
   		result.success = true;
-  		result.data = {
+  		result.data = res;
+  		/*result.data = {
   			fb_data: res,
   			fb_post_id: res.id
-  		};
+  		};*/
   		moduleCallback(result);
 	});
 };
