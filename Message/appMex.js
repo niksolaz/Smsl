@@ -62,11 +62,11 @@ app.post('/message',function(req,res,next){
 			
 			var dataToSave = {
 				message: msg,
-				tweet_id: twitterId,
-				fb_id: facebookId
+				tweet_id: twitterId.id_str,
+				fb_id: facebookId.id
 			};
 			
-			DatabaseModule.post(dataToSave, function databaseCallback( resultData){
+			DatabaseModule.post(dataToSave, function databaseCallback( resultData,next){
 				if(resultData.success === false){
 					next( true, resultData.error);
 					return;
