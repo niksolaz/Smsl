@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 
-app.post('/message',function(req,res){
+app.post('/message',function(req,res,next){
 	var msg = req.body.message;
 	console.log('message',msg);
 
@@ -51,9 +51,7 @@ app.post('/message',function(req,res){
 			
 				var facebookResult = resultData.data;
 				var facebookId = resultData.data ? resultData.data.id : null;
-				console.log('FacebbokID = ....'+facebookResult);
-				
-				next(null, twitterId, facebookResult);
+				next(null, twitterId, facebookId);
 			});
 		},
 		function (twitterId, facebookId, next){
@@ -90,7 +88,7 @@ app.post('/message',function(req,res){
 });
 	
 
-app.get('/message/:message_id',function(req,res){
+app.get('/message/:message_id',function(req,res,next){
 	var messageId = req.params.message_id;
 	console.log('PROGRAM START');
 

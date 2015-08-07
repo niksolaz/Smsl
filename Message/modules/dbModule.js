@@ -19,7 +19,7 @@ db.once('connected',function(){
 
 // Example Schema 
 var msgSchema = mongoose.Schema({
-	user_id: String,
+	user_tw_id: String,
 	user_fb_id: String,
 	message: String,
 	tweet_id: String,
