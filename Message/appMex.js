@@ -49,21 +49,23 @@ app.post('/message',function(req,res,next){
 					return;
 				}
 			
-				var facebookResult = resultData.data;
 				var facebookId = resultData.data ? resultData.data.id : null;
+				console.log('Facebook........'+facebookId);
 				next(null, twitterId, facebookId);
 			});
 		},
 		function (twitterId, facebookId, next){
-			if( !twitterId || !facebookId) {
+			if( !facebookId ) {
 				next( true,"(App Mex) Error retrieving facebook data..");
 				return;
 			}
 			
 			var dataToSave = {
+				user_tw_id: process.env.USER_TW_ID,
+				user_fb_id: process.env.USER_FB_ID,
 				message: msg,
-				tweet_id: twitterId.id_str,
-				fb_id: facebookId.id
+				tweet_id: twitterId,
+				fb_id: facebookId
 			};
 			
 			DatabaseModule.post(dataToSave, function databaseCallback( resultData,next){

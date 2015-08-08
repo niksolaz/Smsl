@@ -63,7 +63,7 @@ module.exports.post = function ( facebookStatus, moduleCallback ){
    			moduleCallback(result);
    			return;
   		}					
-  		console.log('(Facebook) Returning Facebook: ' + JSON.stringify(res));
+  		console.log('(Facebook) Returning Facebook: ' + JSON.stringify(res) );
   		
   		// Format successful data
   		result.success = true;
