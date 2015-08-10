@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var mongoAddress = process.env.MONGO_ADDRESS; // e.g. 127.0.0.1
 var mongoAddressPort = process.env.MONGO_ADDRESS_PORT || 27017; // e.g. 27017
 var mongoColletion = process.env.MONGO_COLLECTION; // e.g. msgGlobal/msgs
-var mongoAddressScheme = "mongodb://"
+var mongoAddressScheme = "mongodb://";
 var mongoURI = mongoAddressScheme + mongoAddress + ":" + mongoAddressPort + "/" + mongoColletion;
 
 console.log("Connecting to MongoDB at the uri: ", mongoURI);
@@ -68,8 +68,8 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		user_tw_id: process.env.USER_TW_ID,
 		user_fb_id: process.env.USER_FB_ID,
 		message: databaseMessage.message, 
-		tweet_id: databaseMessage.id_str, 
-		fb_id: databaseMessage.id
+		tweet_id: databaseMessage.id_str, //undefined
+		fb_id: databaseMessage.id   //undefined
 	});
 	
 	var dataJSON = {

@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var path = require('path');
+//var path = require('path');
 var async = require('async');
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 
 var DatabaseModule = require('./modules/dbModule');
 var TwitterModule = require('./modules/twModule');
@@ -103,7 +103,7 @@ app.get('/message/:message_id',function(req,res,next){
 					// Error calling the database
 					next( true, resultData.error );
 					return;
-				};
+				}
 				
 				next(null, resultData.data); // <- Result from the database "resultData.data"
 			});
@@ -121,7 +121,7 @@ app.get('/message/:message_id',function(req,res,next){
 					// Error calling the database
 					next( true, resultData.error );
 					return;
-				};
+				}
 				
 				var twitterResult = resultData.data;
 				next(null, databaseResult, twitterResult);
@@ -135,7 +135,7 @@ app.get('/message/:message_id',function(req,res,next){
 			}
 			
 			var fb_id = databaseResult.fb_id;
-			console.log("The facebook id is ", fb_id)
+			console.log("The facebook id is ", fb_id);
 			console.log(JSON.stringify(databaseResult));
 			FacebookModule.get(fb_id, function facebookCallback( resultData ){
 				if( resultData.success === false){ //Error retrieving the tweet from Facebook
@@ -153,7 +153,7 @@ app.get('/message/:message_id',function(req,res,next){
 				db: databaseResult, 
 				twitter: twitterResult,
 				facebook: facebookResult
-			}
+			};
 			next(null, finalResult);
 		}],
 		function(err,result){ //<- Final function. It will return the result to the client
