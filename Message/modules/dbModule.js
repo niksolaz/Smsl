@@ -89,7 +89,7 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 			moduleCallback( result );
 			return;
 		}
-		console.log( "(Database) User saved successfully" );
+		console.log( "(Database) User saved successfully"+ JSON.stringify(file));
 		result.success = true;
 		result.data = file;
 		moduleCallback( result );	

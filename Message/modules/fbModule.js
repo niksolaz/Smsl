@@ -54,7 +54,11 @@ module.exports.post = function ( facebookStatus, moduleCallback ){
 			
 	FB.setAccessToken(accessToken);
 	
-	FB.api('me/feed', 'post', { message:facebookStatus }, function ( res ) {
+	FB.api('me/feed', 'post', 
+	{
+		posts:[{ message:facebookStatus },{id:facebookStatus.id}]
+		
+	}, function ( res ) {
 		
 		if( !res || res.error ) {
    			console.log("(Facebook) An error has occurred while posting to Facebook. Error: ", res.error);
@@ -67,7 +71,10 @@ module.exports.post = function ( facebookStatus, moduleCallback ){
   		
   		// Format successful data
   		result.success = true;
-  		result.data = res;
+  		result.data = {
+  			fb_data:res.data, 
+  			fb_id:res.id
+  		};
   		moduleCallback(result);
 	});
 };
