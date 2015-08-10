@@ -71,15 +71,10 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		tweet_id: databaseMessage.id_str, //undefined
 		fb_id: databaseMessage.id   //undefined
 	});
+	msgSocial.tweet_id = valueOf(MSG.prototype.tweet_id);
+	msgSocial.fb_id = valueOf(MSG.prototype.fb_id);
 	
-	var dataJSON = {
-		user_tw_id: msgSocial.user_tw_id,
-		user_fb_id: msgSocial.user_fb_id,
-		message: msgSocial.message, 
-		tweet_id: msgSocial.tweet_id, 
-		fb_id: msgSocial.fb_id
-	};
-	console.log( dataJSON );
+	console.log( msgSocial);
 	
 	msgSocial.save( function( err, file ){  
 		if( err ) {
