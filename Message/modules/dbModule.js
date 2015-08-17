@@ -68,10 +68,9 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		user_tw_id: process.env.USER_TW_ID,
 		user_fb_id: process.env.USER_FB_ID,
 		message: databaseMessage.message, 
-		tweet_id: databaseMessage.id_str, //undefined
-		fb_id: databaseMessage.id   //undefined
+		tweet_id: databaseMessage.id_str, 
+		fb_id: databaseMessage.id   
 	});
-	
 	
 	console.log( msgSocial);
 	
