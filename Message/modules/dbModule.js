@@ -71,8 +71,7 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		tweet_id: databaseMessage.id_str, //undefined
 		fb_id: databaseMessage.id   //undefined
 	});
-	msgSocial.tweet_id = valueOf(MSG.prototype.tweet_id);
-	msgSocial.fb_id = valueOf(MSG.prototype.fb_id);
+	
 	
 	console.log( msgSocial);
 	
