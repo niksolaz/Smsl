@@ -68,10 +68,7 @@ module.exports.post = function ( facebookStatus, moduleCallback ){
   		
   		// Format successful data
   		result.success = true;
-  		result.data = {
-  			fb_data:res.data, 
-  			fb_id:res.id
-  		};
+  		result.data = res;
   		moduleCallback(result);
 	});
 };
