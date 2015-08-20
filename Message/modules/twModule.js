@@ -30,7 +30,7 @@ module.exports.get = function( tweetId, moduleCallback){
 			return;
 		}
 		
-		console.log('(Twitter) Returning the tweets: ' + JSON.stringify(tweet));
+		console.log("(Twitter) Returning the tweets: " + JSON.stringify(tweet));
 		result.success = true;
 		result.data = tweet;
 		moduleCallback( result );

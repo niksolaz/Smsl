@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-//var path = require('path');
+var path = require('path');
 var async = require('async');
-//var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 var DatabaseModule = require('./modules/dbModule');
 var TwitterModule = require('./modules/twModule');
@@ -10,12 +10,14 @@ var FacebookModule = require('./modules/fbModule');
 
 var app = express();
 
+console.log(bodyParser); // check body parser 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
+console.log('Start check problem');
 
-app.post('/message',function(req,res,next){
+app.post('/message',function(req,res){
 	var msg = req.body.message;
 	console.log('message',msg);
 
@@ -85,7 +87,7 @@ app.post('/message',function(req,res,next){
 			 		res.json(result);
 				}
 			}
-	);
+	);   
 	console.log('END PROGRAM');
 });
 	
