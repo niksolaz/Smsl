@@ -11,6 +11,12 @@ var FacebookModule = require('./modules/fbModule');
 var app = express();
 
 console.log(bodyParser); // check body parser 
+
+var headers = getUrlHeaders("http://localhost");
+var options = {method:"HEAD", host:"localhost", port:3000, path:"/"};
+var req = http.request(options, function(res){
+	console.log(JSON.stringify(res.headers));
+});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
