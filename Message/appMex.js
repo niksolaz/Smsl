@@ -12,31 +12,34 @@ var app = express();
 
 console.log(bodyParser); // check body parser 
 
-app.use(bodyParser.json());
+app.use(bodyParser.json());    
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
 console.log('Start check problem');
 
-app.post('/message',function(err,req,res,next){
-	
+//method POST of the app
+app.post('/message',function(req,res,next){
+
 	var msg = req.body.message;
-	console.log('message',JSON.parse(msg));
+	console.log('message',msg);
 
 	console.log('PROGRAM START');
 
-
+	// Waterfall
 	async.waterfall([
 		// Create Twitter message
 		function ( next ){
 			console.log( "(App Mex) message by Twitter" );
-			TwitterModule.post( msg, function twitterCallback( resultData ){
+			TwitterModule.post( msg, function twitterCallback( resultData ){ //method post by module Twitter
+				//data error
 				if ( resultData.success === false ){
-					next( true, resultData.error );
-					return;
+					next( true, resultData.error ); 
+					return;  
 				}
+				//data twitter is success
 				var twitterId = resultData.data ? resultData.data.id_str : null;
-				console.log('Twitter..........'+twitterId);
+				console.log('Twitter..........'+ twitterId); 
 				next( null, resultData.data );
 			});
 		},
@@ -54,7 +57,7 @@ app.post('/message',function(err,req,res,next){
 				}
 			
 				var facebookId = resultData.data ? resultData.data.id : null;
-				console.log('Facebook........'+facebookId);
+				console.log('Facebook........'+ facebookId);
 				next(null, twitterId, facebookId);
 			});
 		},
