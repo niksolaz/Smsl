@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var path = require('path');
+//var path = require('path');
 var async = require('async');
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 
 var DatabaseModule = require('./modules/dbModule');
 var TwitterModule = require('./modules/twModule');
@@ -12,11 +12,6 @@ var app = express();
 
 console.log(bodyParser); // check body parser 
 
-var headers = getUrlHeaders("http://localhost");
-var options = {method:"HEAD", host:"localhost", port:3000, path:"/"};
-var req = http.request(options, function(res){
-	console.log(JSON.stringify(res.headers));
-});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
@@ -24,6 +19,8 @@ app.use(express.static(__dirname + '/public'));
 console.log('Start check problem');
 
 app.post('/message',function(req,res){
+
+	console.log('Method POST');
 	var msg = req.body.message;
 	console.log('message',msg);
 
