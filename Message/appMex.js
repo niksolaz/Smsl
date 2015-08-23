@@ -18,11 +18,10 @@ app.use(express.static(__dirname + '/public'));
 
 console.log('Start check problem');
 
-app.post('/message',function(req,res){
-
-	console.log('Method POST');
+app.post('/message',function(err,req,res,next){
+	
 	var msg = req.body.message;
-	console.log('message',msg);
+	console.log('message',JSON.parse(msg));
 
 	console.log('PROGRAM START');
 
