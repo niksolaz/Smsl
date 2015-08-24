@@ -6,7 +6,7 @@ var client = new Twitter({
 	access_token_key:process.env.TWITTER_ACCESS_TOKEN_KEY,
 	access_token_secret:process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
-
+console.log('Stack 1');
 module.exports.userTweet = function(){
 	var userTweet = process.env.USER_TW_ID;
 	
