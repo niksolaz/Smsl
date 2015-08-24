@@ -1,9 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-//var path = require('path');
+var path = require('path');
 var async = require('async');
-//var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
+// modules of twitter , facebook and db
 var DatabaseModule = require('./modules/dbModule');
 var TwitterModule = require('./modules/twModule');
 var FacebookModule = require('./modules/fbModule');
@@ -16,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-console.log('Start check problem');
+console.log('Start check problem'); // search block by console.log
 
 //method POST of the app
 app.post('/message',function(req,res,next){
