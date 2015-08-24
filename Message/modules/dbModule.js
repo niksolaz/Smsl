@@ -57,14 +57,14 @@ module.exports.get = function( databaseId, moduleCallback ){
 		}
 	);
 };
-
+//method POST
 module.exports.post = function( databaseMessage, moduleCallback ){
 	var result = {
 		success: true,
 		data: null,
 		error: null
 	};
-	
+	//new Schema JSON 
 	var msgSocial = new MSG({
 		user_tw_id: process.env.USER_TW_ID,
 		user_fb_id: process.env.USER_FB_ID,
@@ -73,8 +73,14 @@ module.exports.post = function( databaseMessage, moduleCallback ){
 		fb_id: databaseMessage.id   
 	});
 	
-	console.log( msgSocial);
-	
+	console.log( 
+		msgSocial.user_tw_id, 
+		msgSocial.user_fb_id, 
+		msgSocial.message, 
+		msgSocial.tweet_id, 
+		msgSocial.fb_id
+		); //Output data message
+	//save in database
 	msgSocial.save( function( err, file ){  
 		if( err ) {
 			console.log( "(Database) Error saving the user in Database" );
