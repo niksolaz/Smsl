@@ -94,13 +94,14 @@ app.post('/message',function(req,res,next){
 				}
 			}
 	);   
-	console.log('END PROGRAM');
+	console.log('END PROGRAM'); // ending voice of  async waterfall
 });
 	
 
+//method GET of the app at the path "../:message_id --> ObjectId("1234567890")"
 app.get('/message/:message_id',function(req,res,next){
-	var messageId = req.params.message_id;
-	console.log('PROGRAM START');
+	var messageId = req.params.message_id; //request at the 'message_id' property
+	console.log('PROGRAM START'); // start the async waterfall
 
 	async.waterfall([
 		function(next){
