@@ -61,35 +61,36 @@ app.post('/message',function(req,res,next){
 				next(null, twitterId, facebookId); // passed data at next array with two arguments
 			});
 		},
-		function (twitterId, facebookId, next){
-			if( !facebookId ) {
+		//Save Message in DB with Mongoose
+		function (twitterId, facebookId, next){ //take two arguments
+			if( !facebookId ) { //if facebookId is false return error data
 				next( true,"(App Mex) Error retrieving facebook data..");
 				return;
 			}
-			
+			//Key-value JSON
 			var dataToSave = {
-				user_tw_id: process.env.USER_TW_ID,
-				user_fb_id: process.env.USER_FB_ID,
-				message: msg,
-				tweet_id: twitterId,
-				fb_id: facebookId
+				user_tw_id: process.env.USER_TW_ID, //use value of user id from twitter 
+				user_fb_id: process.env.USER_FB_ID, //use value of user id from facebook
+				message: msg,  //body of the message
+				tweet_id: twitterId, //use value of message id from twitter
+				fb_id: facebookId  //use value of message id from facebook
 			};
 			
-			DatabaseModule.post(dataToSave, function databaseCallback( resultData,next){
-				if(resultData.success === false){
+			DatabaseModule.post(dataToSave, function databaseCallback( resultData,next){ //method post by module database
+				if(resultData.success === false){ //if the result is false than return error
 					next( true, resultData.error);
 					return;
 				}
-				var databaseResult = resultData.data;
+				var databaseResult = resultData.data ? resultData.data.id: null;// if data isn't false use id_str otherwise null
 				next( null, databaseResult);
 			});
 		}
-		], function(err,result){
+		], function(err,result){ //json result 
 				if(err){
-					res.json({'error':result});
+					res.json({'error':result}); //show error json result 
 				}else{
-					console.log('Main callback: '+ result);
-			 		res.json(result);
+					console.log('Main callback: '+ result); 
+			 		res.json(result); //show json result 
 				}
 			}
 	);   
