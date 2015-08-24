@@ -24,23 +24,23 @@ app.post('/message',function(req,res,next){
 	var msg = req.body.message; //contains the key-value of the body-parsing
 	console.log('message',msg); // see object msg
 
-	console.log('PROGRAM START');
+	console.log('PROGRAM START'); // starting voice of  async waterfall
 
 	// Waterfall
-	async.waterfall([
+	async.waterfall([    //runs an array of functions in series, each passing their results to the next in the array
 		// Create Twitter message
 		function ( next ){
 			console.log( "(App Mex) message by Twitter" );
 			TwitterModule.post( msg, function twitterCallback( resultData ){ //method post by module Twitter
 				//data error
-				if ( resultData.success === false ){
+				if ( resultData.success === false ){ //if the result is false than return error
 					next( true, resultData.error ); 
 					return;  
 				}
 				//data twitter is success
-				var twitterId = resultData.data ? resultData.data.id_str : null;
-				console.log('Twitter..........'+ twitterId); 
-				next( null, resultData.data );
+				var twitterId = resultData.data ? resultData.data.id_str : null; // if data isn't false use id_str otherwise null
+				console.log('Twitter..........'+ twitterId); //output data twitterId 
+				next( null, resultData.data ); // passed data at next array with argument twitterId
 			});
 		},
 		// Create Facebook message
