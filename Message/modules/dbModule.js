@@ -27,7 +27,7 @@ var msgSchema = mongoose.Schema({
 });
 
 var MSG = mongoose.model('MSG',msgSchema);
-
+//method GET
 module.exports.get = function( databaseId, moduleCallback ){
 	
 	var result = {
@@ -36,20 +36,21 @@ module.exports.get = function( databaseId, moduleCallback ){
 		error: null
 	};
 	
-	var dbId = mongoose.Types.ObjectId(databaseId);
+	var dbId = mongoose.Types.ObjectId(databaseId); //To specify a type of ObjectId
 	db.collection('msgs').findOne(
 		{
-			'_id':dbId
+			'_id':dbId // ObjectId from collection db
 		},
+		//call file from database
 		function(err,file){
-			if(err){
+			if(err){  
 				console.log('Error read Database...');
 				result.success = false;
 				result.error = err;
 				moduleCallback(result);
-				return;
+				return; 
 			}
-			console.log('From Database: '+ JSON.stringify(file));
+			console.log('From Database: '+ JSON.stringify(file)); // convert value file in string
 			result.success = true;
 			result.data = file;
 			moduleCallback( result );
