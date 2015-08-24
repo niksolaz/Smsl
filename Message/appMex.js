@@ -1,20 +1,19 @@
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
-var async = require('async');
+var async = require('async'); //Asincronous Waterfall
 var mongoose = require('mongoose');
 
 // modules of twitter , facebook and db
-var DatabaseModule = require('./modules/dbModule');
-var TwitterModule = require('./modules/twModule');
-var FacebookModule = require('./modules/fbModule');
+var DatabaseModule = require('./modules/dbModule'); //require module of database
+var TwitterModule = require('./modules/twModule');  //require module of twitter
+var FacebookModule = require('./modules/fbModule'); //require module of facebook
 
-var app = express();
-
-console.log(bodyParser); // check body parser 
-
-app.use(bodyParser.json());    
-app.use(bodyParser.urlencoded({ extended: true }));
+var app = express(); //main application
+ 
+app.use(bodyParser.json());    //return middleware that only parses json (req.body)
+app.use(bodyParser.urlencoded({ extended: true })); //return middleware that only parses urlencoded( UTF-8 )
 app.use(express.static(__dirname + '/public'));
 
 console.log('Start check problem'); // search block by console.log
