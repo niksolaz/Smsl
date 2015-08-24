@@ -44,21 +44,21 @@ app.post('/message',function(req,res,next){
 			});
 		},
 		// Create Facebook message
-		function ( twitterId, next){
-			if( !twitterId ){
+		function ( twitterId, next){ //take value resultData.data in arg1
+			if( !twitterId ){ //if twitterID is false  return error data
 				next( true,"(App Mex) Error retrieving twitter data...");
 				return;
 			}
-			
-			FacebookModule.post( msg, function facebookCallback( resultData ){
-				if(resultData.success === false){
+			// data facebook is success
+			FacebookModule.post( msg, function facebookCallback( resultData ){ //method post by module Facebook
+				if(resultData.success === false){ //if the result is false than return error
 					next( true, resultData.error);
 					return;
 				}
 			
-				var facebookId = resultData.data ? resultData.data.id : null;
-				console.log('Facebook........'+ facebookId);
-				next(null, twitterId, facebookId);
+				var facebookId = resultData.data ? resultData.data.id : null; // if data isn't false use id_str otherwise null
+				console.log('Facebook........'+ facebookId); // output data FacebookId
+				next(null, twitterId, facebookId); // passed data at next array with two arguments
 			});
 		},
 		function (twitterId, facebookId, next){
