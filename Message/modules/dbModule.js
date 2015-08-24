@@ -25,7 +25,7 @@ var msgSchema = mongoose.Schema({
 	tweet_id: String,
 	fb_id: String
 });
-
+console.log('Stack 1 ',msgSchema);
 var MSG = mongoose.model('MSG',msgSchema);
 //method GET
 module.exports.get = function( databaseId, moduleCallback ){

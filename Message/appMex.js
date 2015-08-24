@@ -20,8 +20,6 @@ console.log('Start check problem'); // search block by console.log
 
 //method POST of the app at the path "/message"
 app.post('/message',function(req,res,next){
-	var error = 'stack number 1';
-	console.log(error);
 	var msg = req.body.message; //contains the key-value of the body-parsing
 	console.log('message',msg); // see object msg
 
