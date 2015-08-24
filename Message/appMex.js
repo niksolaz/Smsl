@@ -125,18 +125,19 @@ app.get('/message/:message_id',function(req,res,next){
 				return;
 			} 
 			
-			var tweet_id = databaseResult.tweet_id;  
-			TwitterModule.get(tweet_id, function twitterCallback( resultData ){ 
+			var tweet_id = databaseResult.tweet_id;  // id to the message twitter
+			TwitterModule.get(tweet_id, function twitterCallback( resultData ){  // from module twitter
 				if ( resultData.success === false){ // Error retrieving the tweet from Twitter
 					// Error calling the database
 					next( true, resultData.error );
 					return;
 				}
 				
-				var twitterResult = resultData.data;
-				next(null, databaseResult, twitterResult);
+				var twitterResult = resultData.data; // retrieving data twitter
+				next(null, databaseResult, twitterResult); //result from twitter
 			});
 		},
+		//Facebook call
 		function(databaseResult, twitterResult, next){
 			/// TODO: Facebook call
 			if ( !databaseResult || !databaseResult.fb_id ){
