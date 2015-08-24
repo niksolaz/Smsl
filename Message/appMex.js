@@ -18,11 +18,11 @@ app.use(express.static(__dirname + '/public'));
 
 console.log('Start check problem'); // search block by console.log
 
-//method POST of the app
+//method POST of the app at the path "/message"
 app.post('/message',function(req,res,next){
 
-	var msg = req.body.message;
-	console.log('message',msg);
+	var msg = req.body.message; //contains the key-value of the body-parsing
+	console.log('message',msg); // see object msg
 
 	console.log('PROGRAM START');
 
