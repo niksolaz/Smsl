@@ -140,25 +140,26 @@ app.get('/message/:message_id',function(req,res,next){
 		//Facebook call
 		function(databaseResult, twitterResult, next){
 			/// TODO: Facebook call
-			if ( !databaseResult || !databaseResult.fb_id ){
+			if ( !databaseResult || !databaseResult.fb_id ){ // condition from databaseResult
 				next( true, "(App Mex) Error retrieving the fb_id from the database...");
 				return;
 			}
 			
-			var fb_id = databaseResult.fb_id;
+			var fb_id = databaseResult.fb_id; // id to the message facebook
 			console.log("The facebook id is ", fb_id);
 			console.log(JSON.stringify(databaseResult));
-			FacebookModule.get(fb_id, function facebookCallback( resultData ){
+			FacebookModule.get(fb_id, function facebookCallback( resultData ){ // from module facebook
 				if( resultData.success === false){ //Error retrieving the tweet from Facebook
 					// Error calling the database
 					next( true, resultData.error);
 					return;
 				}
 				
-				var facebookResult = resultData.data;
+				var facebookResult = resultData.data; // retrieving data facebook
 				next(null,databaseResult, twitterResult, facebookResult);
 			});
 		},
+		//Final result 
 		function(databaseResult, twitterResult, facebookResult, next){
 			var finalResult = {
 				db: databaseResult, 
@@ -173,12 +174,13 @@ app.get('/message/:message_id',function(req,res,next){
 				return;
 			}
 				
-			res.json(result);
+			res.json(result); // show json result
 		}
 	);
-	console.log('END PROGRAM');
+	console.log('END PROGRAM'); //end async waterfall
 });
 
+//server http://localhost:3000
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
