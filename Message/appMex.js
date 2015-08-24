@@ -107,8 +107,8 @@ app.get('/message/:message_id',function(req,res,next){
 		function(next){
 			// Database call
 			console.log("(AppMex) Fetching a database record by ID");
-			DatabaseModule.get(messageId, function databaseCallback( resultData ){
-				if ( resultData.success === false){
+			DatabaseModule.get(messageId, function databaseCallback( resultData ){ //from module database execute
+				if ( resultData.success === false){ //if result is false return error data
 					// Error calling the database
 					next( true, resultData.error );
 					return;
@@ -117,14 +117,15 @@ app.get('/message/:message_id',function(req,res,next){
 				next(null, resultData.data); // <- Result from the database "resultData.data"
 			});
 		},
-		function(databaseResult, next){
+		//Twitter call
+		function(databaseResult, next){ // argument is the resultData from database 
 			// Twitter call
-			if ( !databaseResult || !databaseResult.tweet_id ){
+			if ( !databaseResult || !databaseResult.tweet_id ){ //condition: if one of two is false return error
 				next(true, "(App Mex) Error retrieving the tweet_id from the database...");
 				return;
 			} 
 			
-			var tweet_id = databaseResult.tweet_id;
+			var tweet_id = databaseResult.tweet_id;  
 			TwitterModule.get(tweet_id, function twitterCallback( resultData ){ 
 				if ( resultData.success === false){ // Error retrieving the tweet from Twitter
 					// Error calling the database
