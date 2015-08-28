@@ -55,7 +55,7 @@ module.exports.post = function( twitterStatus, moduleCallback){
 		console.log("(Twitter) Returning the tweet", JSON.stringify(tweet));
 		
 		result.success = true;
-		result.data = [tweet.id_str,tweet.id,tweet.data];
+		result.data = tweet;
 		moduleCallback( result );
 	});
 };

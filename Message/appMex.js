@@ -62,7 +62,7 @@ app.post('/message',function(req,res,next){
 		},
 		//Save Message in DB with Mongoose
 		function (twitterId, facebookId, next){ //take two arguments
-			if( !facebookId ) { //if facebookId is false return error data
+			if( !facebookId ? facebookId : null ) { //if facebookId is false return error data
 				next( true,"(App Mex) Error retrieving facebook data..");
 				return;
 			}
@@ -119,12 +119,13 @@ app.get('/message/:message_id',function(req,res,next){
 		//Twitter call
 		function(databaseResult, next){ // argument is the resultData from database 
 			// Twitter call
-			if ( !databaseResult || !databaseResult.tweet_id ){ //condition: if one of two is false return error
+			if ( !databaseResult ){ //condition: if one of two is false return error
 				next(true, "(App Mex) Error retrieving the tweet_id from the database...");
 				return;
 			} 
 			
-			var tweet_id = databaseResult.tweet_id;  // id to the message twitter
+			var tweet_id = databaseResult.user_tw_id;  // id to the message twitter
+			console.log("This is tweet id that i see: ",tweet_id);
 			TwitterModule.get(tweet_id, function twitterCallback( resultData ){  // from module twitter
 				if ( resultData.success === false){ // Error retrieving the tweet from Twitter
 					// Error calling the database
@@ -132,19 +133,19 @@ app.get('/message/:message_id',function(req,res,next){
 					return;
 				}
 				
-				var twitterResult = resultData.data; // retrieving data twitter
+				var twitterResult = resultData.data.message; // retrieving data twitter
 				next(null, databaseResult, twitterResult); //result from twitter
 			});
 		},
 		//Facebook call
 		function(databaseResult, twitterResult, next){
 			/// TODO: Facebook call
-			if ( !databaseResult || !databaseResult.fb_id ){ // condition from databaseResult
+			if ( !databaseResult ){ // condition from databaseResult
 				next( true, "(App Mex) Error retrieving the fb_id from the database...");
 				return;
 			}
 			
-			var fb_id = databaseResult.fb_id; // id to the message facebook
+			var fb_id = databaseResult.user_fb_id; // id to the message facebook
 			console.log("The facebook id is ", fb_id);
 			console.log(JSON.stringify(databaseResult));
 			FacebookModule.get(fb_id, function facebookCallback( resultData ){ // from module facebook
@@ -154,7 +155,7 @@ app.get('/message/:message_id',function(req,res,next){
 					return;
 				}
 				
-				var facebookResult = resultData.data; // retrieving data facebook
+				var facebookResult = resultData.data.message; // retrieving data facebook
 				next(null,databaseResult, twitterResult, facebookResult);
 			});
 		},
